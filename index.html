@@ -97,15 +97,49 @@ button:disabled {
   gap: 16px;
 }
 
+/* =========================
+   FEAT CARD
+========================= */
+
 .card {
+  position: relative;
+  overflow: hidden;
   background: #121217;
   border: 1px solid #292931;
   border-radius: 14px;
   padding: 20px;
+  min-height: 250px;
+}
+
+/* YouTube thumbnail */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--thumbnail);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.38;
+  z-index: 0;
+}
+
+/* Dark overlay */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  z-index: 1;
+}
+
+/* Keep card content above thumbnail */
+.card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .game {
-  color: #888;
+  color: #bbb;
   font-size: 13px;
 }
 
@@ -117,7 +151,7 @@ button:disabled {
 
 .pill {
   display: inline-block;
-  background: #22222b;
+  background: rgba(20, 20, 25, 0.85);
   border-radius: 20px;
   padding: 5px 9px;
   font-size: 12px;
@@ -125,7 +159,7 @@ button:disabled {
 }
 
 .description {
-  color: #aaa;
+  color: #ccc;
   line-height: 1.5;
   margin: 15px 0;
 }
@@ -480,9 +514,7 @@ const OWNER_ID =
 
 
 /*
-  IMPORTANT:
-  The client is deliberately called supabaseClient
-  instead of supabase to avoid a global name collision.
+  Supabase client
 */
 
 const supabaseClient =
@@ -1117,6 +1149,112 @@ function safeURL(value) {
 
 
 /* =========================
+   YOUTUBE THUMBNAIL
+========================= */
+
+function getYouTubeThumbnail(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  try {
+
+    const url =
+      new URL(value);
+
+    let videoId = "";
+
+
+    /*
+      youtube.com/watch?v=VIDEO_ID
+    */
+
+    if (
+      url.hostname.includes("youtube.com")
+    ) {
+
+      videoId =
+        url.searchParams.get("v") || "";
+
+
+      /*
+        youtube.com/shorts/VIDEO_ID
+      */
+
+      if (
+        !videoId &&
+        url.pathname.startsWith("/shorts/")
+      ) {
+
+        videoId =
+          url.pathname
+            .split("/shorts/")[1]
+            .split("/")[0];
+
+      }
+
+
+      /*
+        youtube.com/embed/VIDEO_ID
+      */
+
+      if (
+        !videoId &&
+        url.pathname.startsWith("/embed/")
+      ) {
+
+        videoId =
+          url.pathname
+            .split("/embed/")[1]
+            .split("/")[0];
+
+      }
+
+    }
+
+
+    /*
+      youtu.be/VIDEO_ID
+    */
+
+    if (
+      url.hostname === "youtu.be"
+    ) {
+
+      videoId =
+        url.pathname
+          .replace("/", "")
+          .split("/")[0];
+
+    }
+
+
+    if (!videoId) {
+      return "";
+    }
+
+
+    /*
+      Max-resolution YouTube thumbnail
+    */
+
+    return (
+      "https://img.youtube.com/vi/" +
+      encodeURIComponent(videoId) +
+      "/maxresdefault.jpg"
+    );
+
+  } catch (error) {
+
+    return "";
+
+  }
+
+}
+
+
+/* =========================
    RENDER
 ========================= */
 
@@ -1194,9 +1332,29 @@ function render() {
           safeURL(feat.proof_url);
 
 
+        const thumbnail =
+          getYouTubeThumbnail(
+            feat.proof_url
+          );
+
+
+        /*
+          Put the thumbnail into the CSS
+          variable used by .card::before.
+        */
+
+        const thumbnailStyle =
+          thumbnail
+            ? `--thumbnail: url("${thumbnail}");`
+            : `--thumbnail: none;`;
+
+
         return `
 
-          <article class="card">
+          <article
+            class="card"
+            style="${thumbnailStyle}"
+          >
 
             <div class="game">
               ${escapeHTML(
