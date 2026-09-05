@@ -97,7 +97,6 @@ button:disabled {
   gap: 16px;
 }
 
-
 /* =========================
    FEAT CARD
 ========================= */
@@ -187,7 +186,6 @@ button:disabled {
   grid-column: 1 / -1;
 }
 
-
 /* =========================
    IMAGE UPLOAD
 ========================= */
@@ -220,7 +218,6 @@ button:disabled {
   color: #777;
   font-size: 11px;
 }
-
 
 /* =========================
    MODALS
@@ -289,7 +286,6 @@ textarea {
 }
 
 @media(max-width: 600px) {
-
   .row {
     grid-template-columns: 1fr;
   }
@@ -297,7 +293,6 @@ textarea {
   header {
     flex-direction: column;
   }
-
 }
 </style>
 </head>
@@ -329,7 +324,6 @@ textarea {
 
 </header>
 
-
 <main>
 
   <div class="toolbar">
@@ -341,17 +335,12 @@ textarea {
     >
 
     <select id="filter">
-
-      <option value="">
-        All difficulties
-      </option>
-
+      <option value="">All difficulties</option>
       <option>Easy</option>
       <option>Normal</option>
       <option>Hard</option>
       <option>Insane</option>
       <option>Extreme</option>
-
     </select>
 
     <button
@@ -365,109 +354,74 @@ textarea {
 
   </div>
 
-
   <div id="grid" class="grid"></div>
 
 </main>
 
-
-<!-- =========================
-     FEAT MODAL
-========================= -->
+<!-- FEAT MODAL -->
 
 <div id="modal" class="modal">
 
   <div class="modal-box">
 
-    <h2 id="modalTitle">
-      Add Feat
-    </h2>
-
+    <h2 id="modalTitle">Add Feat</h2>
 
     <form id="featForm">
 
-      <input
-        type="hidden"
-        id="editId"
-      >
-
+      <input type="hidden" id="editId">
 
       <div class="row">
 
         <div>
-
-          <label>
-            FEAT NAME
-          </label>
+          <label>FEAT NAME</label>
 
           <input
             id="name"
             required
             placeholder="Example: Dark Souls II SL1"
           >
-
         </div>
 
-
         <div>
-
-          <label>
-            GAME
-          </label>
+          <label>GAME</label>
 
           <input
             id="game"
             required
             placeholder="Example: Dark Souls II"
           >
-
         </div>
 
       </div>
 
-
       <div class="row">
 
         <div>
-
-          <label>
-            DIFFICULTY
-          </label>
+          <label>DIFFICULTY</label>
 
           <select id="difficulty">
-
             <option>Easy</option>
             <option>Normal</option>
             <option>Hard</option>
             <option>Insane</option>
             <option>Extreme</option>
-
           </select>
-
         </div>
 
-
         <div>
-
-          <label>
-            DATE COMPLETED
-          </label>
+          <label>DATE COMPLETED</label>
 
           <input
             id="date"
             type="date"
           >
-
         </div>
 
       </div>
 
-
       <div>
 
-        <label>
-          DESCRIPTION
-        </label>
+        <label>DESCRIPTION</label>
 
         <textarea
           id="description"
@@ -476,12 +430,9 @@ textarea {
 
       </div>
 
-
       <div>
 
-        <label>
-          PROOF URL
-        </label>
+        <label>PROOF URL</label>
 
         <input
           id="proof"
@@ -491,14 +442,9 @@ textarea {
 
       </div>
 
-
-      <!-- IMAGE UPLOAD -->
-
       <div class="image-upload">
 
-        <label>
-          CUSTOM THUMBNAIL
-        </label>
+        <label>CUSTOM THUMBNAIL</label>
 
         <input
           id="thumbnailFile"
@@ -518,7 +464,6 @@ textarea {
         >
 
       </div>
-
 
       <div class="form-buttons">
 
@@ -545,27 +490,19 @@ textarea {
 
 </div>
 
-
-<!-- =========================
-     LOGIN MODAL
-========================= -->
+<!-- LOGIN MODAL -->
 
 <div id="authModal" class="modal">
 
   <div class="modal-box">
 
-    <h2>
-      Login
-    </h2>
-
+    <h2>Login</h2>
 
     <form id="authForm">
 
       <div>
 
-        <label>
-          EMAIL
-        </label>
+        <label>EMAIL</label>
 
         <input
           id="authEmail"
@@ -576,12 +513,9 @@ textarea {
 
       </div>
 
-
       <div>
 
-        <label>
-          PASSWORD
-        </label>
+        <label>PASSWORD</label>
 
         <input
           id="authPassword"
@@ -592,12 +526,10 @@ textarea {
 
       </div>
 
-
       <div
         id="authError"
         class="error"
       ></div>
-
 
       <div class="form-buttons">
 
@@ -623,9 +555,7 @@ textarea {
 
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -642,6 +572,8 @@ const SUPABASE_PUBLISHABLE_KEY =
 const OWNER_ID =
   "d308964b-015f-48f1-a9b2-196c6812f654";
 
+const IMAGE_BUCKET =
+  "feat-images";
 
 const supabaseClient =
   window.supabase.createClient(
@@ -649,15 +581,8 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY
   );
 
-
-const IMAGE_BUCKET =
-  "feat-images";
-
-
 let feats = [];
-
 let currentUser = null;
-
 let selectedThumbnailFile = null;
 
 
@@ -676,7 +601,6 @@ async function checkAuth() {
     session ? session.user : null;
 
   updateAuthUI();
-
 }
 
 
@@ -687,7 +611,6 @@ supabaseClient.auth.onAuthStateChange(
       session ? session.user : null;
 
     updateAuthUI();
-
     render();
 
   }
@@ -704,7 +627,6 @@ function updateAuthUI() {
 
   const addButton =
     document.getElementById("addButton");
-
 
   if (
     currentUser &&
@@ -811,7 +733,6 @@ document
       errorBox.style.display =
         "none";
 
-
       const {
         data,
         error
@@ -820,7 +741,6 @@ document
           email,
           password
         });
-
 
       if (error) {
 
@@ -833,7 +753,6 @@ document
         return;
 
       }
-
 
       if (
         !data.user ||
@@ -851,7 +770,6 @@ document
         return;
 
       }
-
 
       closeAuthModal();
 
@@ -879,7 +797,6 @@ async function loadFeats() {
         }
       );
 
-
   if (error) {
 
     console.error(
@@ -895,9 +812,7 @@ async function loadFeats() {
     `;
 
     return;
-
   }
-
 
   feats =
     data || [];
@@ -916,11 +831,9 @@ function handleAddClick() {
   if (!currentUser) {
 
     openAuthModal();
-
     return;
 
   }
-
 
   if (
     currentUser.id !== OWNER_ID
@@ -933,7 +846,6 @@ function handleAddClick() {
     return;
 
   }
-
 
   openModal();
 
@@ -948,16 +860,13 @@ function openModal(id = null) {
   ) {
 
     openAuthModal();
-
     return;
 
   }
 
-
   document
     .getElementById("modal")
     .classList.add("open");
-
 
   document
     .getElementById("editId")
@@ -966,7 +875,6 @@ function openModal(id = null) {
       ? String(id)
       : "";
 
-
   document
     .getElementById("modalTitle")
     .textContent =
@@ -974,24 +882,19 @@ function openModal(id = null) {
       ? "Edit Feat"
       : "Add Feat";
 
-
   selectedThumbnailFile =
     null;
-
 
   document
     .getElementById("thumbnailFile")
     .value =
     "";
 
-
   const preview =
     document.getElementById("imagePreview");
 
   preview.src = "";
-
   preview.classList.remove("show");
-
 
   if (id !== null) {
 
@@ -1001,60 +904,37 @@ function openModal(id = null) {
           String(f.id) === String(id)
       );
 
-
     if (!feat) {
 
       closeModal();
-
       return;
 
     }
 
-
-    document
-      .getElementById("name")
-      .value =
+    document.getElementById("name").value =
       feat.name || "";
 
-
-    document
-      .getElementById("game")
-      .value =
+    document.getElementById("game").value =
       feat.game || "";
 
-
-    document
-      .getElementById("difficulty")
-      .value =
+    document.getElementById("difficulty").value =
       feat.difficulty || "Normal";
 
-
-    document
-      .getElementById("date")
-      .value =
+    document.getElementById("date").value =
       feat.date || "";
 
-
-    document
-      .getElementById("description")
-      .value =
+    document.getElementById("description").value =
       feat.description || "";
 
-
-    document
-      .getElementById("proof")
-      .value =
+    document.getElementById("proof").value =
       feat.proof_url || "";
-
 
     if (feat.thumbnail_url) {
 
       preview.src =
         feat.thumbnail_url;
 
-      preview.classList.add(
-        "show"
-      );
+      preview.classList.add("show");
 
     }
 
@@ -1065,7 +945,6 @@ function openModal(id = null) {
       .reset();
 
   }
-
 
   document
     .getElementById("name")
@@ -1105,7 +984,6 @@ document
 
       }
 
-
       if (
         !file.type.startsWith("image/")
       ) {
@@ -1120,7 +998,6 @@ document
         return;
 
       }
-
 
       if (
         file.size > 10 * 1024 * 1024
@@ -1137,14 +1014,11 @@ document
 
       }
 
-
       selectedThumbnailFile =
         file;
 
-
       const reader =
         new FileReader();
-
 
       reader.onload =
         e => {
@@ -1163,7 +1037,6 @@ document
 
         };
 
-
       reader.readAsDataURL(file);
 
     }
@@ -1174,48 +1047,40 @@ document
    UPLOAD IMAGE
 ========================= */
 
-async function uploadThumbnail(file, featId) {
+async function uploadThumbnail(
+  file,
+  featId
+) {
 
   if (!file) {
     return null;
   }
 
-  // Make absolutely sure we have a current authenticated session
-  let {
-    data: { session },
+  const {
+    data: sessionData,
     error: sessionError
-  } = await supabaseClient.auth.getSession();
+  } =
+    await supabaseClient.auth.getSession();
 
   if (sessionError) {
     throw sessionError;
   }
 
+  const session =
+    sessionData.session;
+
   if (!session) {
-    throw new Error("Your login session has expired. Please log in again.");
+    throw new Error(
+      "Your login session has expired. Please log in again."
+    );
   }
 
-  // Refresh the session if necessary
-  if (session.expires_at && session.expires_at * 1000 < Date.now() + 60000) {
-
-    const {
-      data: refreshed,
-      error: refreshError
-    } = await supabaseClient.auth.refreshSession();
-
-    if (refreshError) {
-      throw refreshError;
-    }
-
-    session = refreshed.session;
-
-    if (!session) {
-      throw new Error("Could not refresh your login session.");
-    }
-  }
-
-  // Make sure the logged-in account is actually the owner
-  if (session.user.id !== OWNER_ID) {
-    throw new Error("You are not authorized to upload images.");
+  if (
+    session.user.id !== OWNER_ID
+  ) {
+    throw new Error(
+      "You are not authorized to upload images."
+    );
   }
 
   const extension =
@@ -1224,7 +1089,6 @@ async function uploadThumbnail(file, featId) {
       .pop()
       .toLowerCase();
 
-  // Use the actual authenticated user's ID
   const filePath =
     session.user.id +
     "/" +
@@ -1234,8 +1098,15 @@ async function uploadThumbnail(file, featId) {
     "." +
     extension;
 
-  console.log("Uploading image to:", filePath);
-  console.log("Authenticated user:", session.user.id);
+  console.log(
+    "Uploading image to:",
+    filePath
+  );
+
+  console.log(
+    "Authenticated user:",
+    session.user.id
+  );
 
   const {
     error: uploadError
@@ -1261,72 +1132,8 @@ async function uploadThumbnail(file, featId) {
     );
 
     throw uploadError;
-  }
-
-  const {
-    data
-  } =
-    supabaseClient
-      .storage
-      .from(IMAGE_BUCKET)
-      .getPublicUrl(filePath);
-
-  if (!data || !data.publicUrl) {
-    throw new Error("Image uploaded, but no public URL was returned.");
-  }
-
-  return data.publicUrl;
-}
-
-  if (!file) {
-    return null;
-  }
-
-
-  const extension =
-    file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-
-
-  const filePath =
-    OWNER_ID +
-    "/" +
-    featId +
-    "-" +
-    Date.now() +
-    "." +
-    extension;
-
-
-  const {
-    error: uploadError
-  } =
-    await supabaseClient
-      .storage
-      .from(IMAGE_BUCKET)
-      .upload(
-        filePath,
-        file,
-        {
-          upsert: true,
-          contentType: file.type
-        }
-      );
-
-
-  if (uploadError) {
-
-    console.error(
-      "Image upload failed:",
-      uploadError
-    );
-
-    throw uploadError;
 
   }
-
 
   const {
     data
@@ -1338,6 +1145,16 @@ async function uploadThumbnail(file, featId) {
         filePath
       );
 
+  if (
+    !data ||
+    !data.publicUrl
+  ) {
+
+    throw new Error(
+      "Image uploaded, but no public URL was returned."
+    );
+
+  }
 
   return data.publicUrl;
 
@@ -1356,7 +1173,6 @@ document
 
       event.preventDefault();
 
-
       if (
         !currentUser ||
         currentUser.id !== OWNER_ID
@@ -1370,12 +1186,10 @@ document
 
       }
 
-
       const saveButton =
         document.getElementById(
           "saveButton"
         );
-
 
       saveButton.disabled =
         true;
@@ -1383,14 +1197,12 @@ document
       saveButton.textContent =
         "Saving...";
 
-
       try {
 
         const id =
           document
             .getElementById("editId")
             .value;
-
 
         const featData = {
 
@@ -1415,7 +1227,7 @@ document
             document
               .getElementById("date")
               .value ||
-              null,
+            null,
 
           description:
             document
@@ -1428,18 +1240,14 @@ document
               .getElementById("proof")
               .value
               .trim() ||
-              null
+            null
 
         };
-
 
         let savedFeatId =
           id;
 
-
-        /*
-          ADD
-        */
+        /* ADD */
 
         if (!id) {
 
@@ -1455,21 +1263,16 @@ document
               .select()
               .single();
 
-
           if (error) {
             throw error;
           }
-
 
           savedFeatId =
             data.id;
 
         }
 
-
-        /*
-          EDIT
-        */
+        /* EDIT */
 
         else {
 
@@ -1486,17 +1289,13 @@ document
                 id
               );
 
-
           if (error) {
             throw error;
           }
 
         }
 
-
-        /*
-          Upload custom thumbnail
-        */
+        /* UPLOAD THUMBNAIL */
 
         if (
           selectedThumbnailFile
@@ -1507,7 +1306,6 @@ document
               selectedThumbnailFile,
               savedFeatId
             );
-
 
           const {
             error
@@ -1523,13 +1321,11 @@ document
                 savedFeatId
               );
 
-
           if (error) {
             throw error;
           }
 
         }
-
 
         closeModal();
 
@@ -1537,7 +1333,6 @@ document
           null;
 
         await loadFeats();
-
 
       } catch (error) {
 
@@ -1550,7 +1345,6 @@ document
           "Failed to save feat:\n\n" +
           error.message
         );
-
 
       } finally {
 
@@ -1585,7 +1379,6 @@ async function deleteFeat(id) {
 
   }
 
-
   if (
     !confirm(
       "Delete this feat?"
@@ -1595,7 +1388,6 @@ async function deleteFeat(id) {
     return;
 
   }
-
 
   const {
     error
@@ -1607,7 +1399,6 @@ async function deleteFeat(id) {
         "id",
         id
       );
-
 
   if (error) {
 
@@ -1624,7 +1415,6 @@ async function deleteFeat(id) {
     return;
 
   }
-
 
   await loadFeats();
 
@@ -1663,12 +1453,10 @@ function safeURL(value) {
     return "";
   }
 
-
   try {
 
     const url =
       new URL(value);
-
 
     if (
       url.protocol === "http:" ||
@@ -1680,9 +1468,7 @@ function safeURL(value) {
     }
 
   } catch (error) {
-
   }
-
 
   return "";
 
@@ -1699,16 +1485,13 @@ function getYouTubeThumbnail(value) {
     return "";
   }
 
-
   try {
 
     const url =
       new URL(value);
 
-
     let videoId =
       "";
-
 
     if (
       url.hostname.includes(
@@ -1719,7 +1502,6 @@ function getYouTubeThumbnail(value) {
       videoId =
         url.searchParams.get("v") ||
         "";
-
 
       if (
         !videoId &&
@@ -1734,7 +1516,6 @@ function getYouTubeThumbnail(value) {
             .split("/")[0];
 
       }
-
 
       if (
         !videoId &&
@@ -1752,7 +1533,6 @@ function getYouTubeThumbnail(value) {
 
     }
 
-
     if (
       url.hostname === "youtu.be"
     ) {
@@ -1764,17 +1544,13 @@ function getYouTubeThumbnail(value) {
 
     }
 
-
     if (!videoId) {
       return "";
     }
 
-
     return (
       "https://img.youtube.com/vi/" +
-      encodeURIComponent(
-        videoId
-      ) +
+      encodeURIComponent(videoId) +
       "/hqdefault.jpg"
     );
 
@@ -1799,12 +1575,10 @@ function render() {
       .value
       .toLowerCase();
 
-
   const difficulty =
     document
       .getElementById("filter")
       .value;
-
 
   const filtered =
     feats.filter(
@@ -1822,12 +1596,10 @@ function render() {
           .toLowerCase()
           .includes(query);
 
-
         const matchesDifficulty =
           !difficulty ||
           feat.difficulty ===
             difficulty;
-
 
         return (
           matchesSearch &&
@@ -1837,12 +1609,10 @@ function render() {
       }
     );
 
-
   const grid =
     document.getElementById(
       "grid"
     );
-
 
   if (!filtered.length) {
 
@@ -1866,7 +1636,6 @@ function render() {
 
   }
 
-
   grid.innerHTML =
     filtered
       .map(
@@ -1877,24 +1646,16 @@ function render() {
               feat.proof_url
             );
 
-
-          /*
-            CUSTOM IMAGE FIRST
-            YOUTUBE SECOND
-          */
-
           const thumbnail =
             feat.thumbnail_url ||
             getYouTubeThumbnail(
               feat.proof_url
             );
 
-
           const thumbnailStyle =
             thumbnail
               ? `--thumbnail: url("${escapeHTML(thumbnail)}");`
               : `--thumbnail: none;`;
-
 
           return `
 
@@ -1909,13 +1670,11 @@ function render() {
                 )}
               </div>
 
-
               <div class="name">
                 ${escapeHTML(
                   feat.name || ""
                 )}
               </div>
-
 
               <div>
 
@@ -1925,79 +1684,72 @@ function render() {
                   )}
                 </span>
 
-
                 ${
                   feat.date
-                  ? `
-                    <span class="pill">
-                      ${escapeHTML(
-                        feat.date
-                      )}
-                    </span>
-                  `
-                  : ""
+                    ? `
+                      <span class="pill">
+                        ${escapeHTML(
+                          feat.date
+                        )}
+                      </span>
+                    `
+                    : ""
                 }
 
               </div>
 
-
               ${
                 feat.description
-                ? `
-                  <div class="description">
-                    ${escapeHTML(
-                      feat.description
-                    )}
-                  </div>
-                `
-                : ""
+                  ? `
+                    <div class="description">
+                      ${escapeHTML(
+                        feat.description
+                      )}
+                    </div>
+                  `
+                  : ""
               }
-
 
               <div class="actions">
 
                 ${
                   proofURL
-                  ? `
-                    <a
-                      class="proof"
-                      href="${escapeHTML(
-                        proofURL
-                      )}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-
-                      <button type="button">
-                        Proof ↗
-                      </button>
-
-                    </a>
-                  `
-                  : ""
+                    ? `
+                      <a
+                        class="proof"
+                        href="${escapeHTML(
+                          proofURL
+                        )}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <button type="button">
+                          Proof ↗
+                        </button>
+                      </a>
+                    `
+                    : ""
                 }
-
 
                 ${
                   currentUser &&
                   currentUser.id === OWNER_ID
-                  ? `
-                    <button
-                      type="button"
-                      onclick="openModal('${feat.id}')"
-                    >
-                      Edit
-                    </button>
+                    ? `
+                      <button
+                        type="button"
+                        onclick="openModal('${feat.id}')"
+                      >
+                        Edit
+                      </button>
 
-
-                    <button
-                      type="button"
-                      onclick="deleteFeat('${feat.id}')"
-                    >
-                      Delete
-                    </button>
-                  `
-                  : ""
+                      <button
+                        type="button"
+                        onclick="deleteFeat('${feat.id}')"
+                      >
+                        Delete
+                      </button>
+                    `
+                    : ""
                 }
 
               </div>
@@ -2023,7 +1775,6 @@ document
     "input",
     render
   );
-
 
 document
   .getElementById("filter")
@@ -2055,7 +1806,6 @@ document
     }
   );
 
-
 document
   .getElementById("authModal")
   .addEventListener(
@@ -2082,11 +1832,9 @@ document
 async function startApp() {
 
   await checkAuth();
-
   await loadFeats();
 
 }
-
 
 startApp();
 
