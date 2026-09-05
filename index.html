@@ -1668,10 +1668,9 @@ function render() {
            * THE IMAGE URL
            */
 
-          const thumbnailStyle =
-            thumbnail
-              ? `--thumbnail: url("${thumbnail.replace(/"/g, '\\"')}");`
-              : `--thumbnail: none;`;
+          const thumbnailStyle = thumbnail
+  ? `--thumbnail: url(${thumbnail});`
+  : `--thumbnail: none;`;
 
           return `
 
