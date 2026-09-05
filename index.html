@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oosmafeats</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b0b0f;
+  color: #eee;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 45px 7% 30px;
+  border-bottom: 1px solid #25252c;
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.subtitle {
+  color: #888;
+  margin-top: 6px;
+}
+
+main {
+  width: min(1100px, 86%);
+  margin: 30px auto;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  border: 1px solid #303039;
+  background: #15151b;
+  color: white;
+  border-radius: 9px;
+  padding: 11px 13px;
+}
+
+.search {
+  flex: 1;
+  min-width: 220px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.add {
+  background: white;
+  color: black;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #121217;
+  border: 1px solid #292931;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.game {
+  color: #888;
+  font-size: 13px;
+}
+
+.name {
+  font-size: 21px;
+  font-weight: bold;
+  margin: 8px 0 13px;
+}
+
+.pill {
+  display: inline-block;
+  background: #22222b;
+  border-radius: 20px;
+  padding: 5px 9px;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.description {
+  color: #aaa;
+  line-height: 1.5;
+  margin: 15px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 7px;
+}
+
+.actions button {
+  font-size: 12px;
+  padding: 7px 10px;
+}
+
+.proof {
+  color: #bbb;
+  text-decoration: none;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 70px 10px;
+  border: 1px dashed #292931;
+  border-radius: 14px;
+  grid-column: 1 / -1;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000b;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-box {
+  width: min(520px, 100%);
+  background: #111116;
+  border: 1px solid #292931;
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.modal-box h2 {
+  margin-top: 0;
+}
+
+form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  color: #999;
+  font-size: 12px;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media(max-width: 600px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">OOSMAFEATS</div>
+  <div class="subtitle">All my feats.</div>
+</header>
+
+<main>
+
+  <div class="toolbar">
+    <input
+      id="search"
+      class="search"
+      placeholder="Search feats or games..."
+    >
+
+    <select id="filter">
+      <option value="">All difficulties</option>
+      <option>Easy</option>
+      <option>Normal</option>
+      <option>Hard</option>
+      <option>Insane</option>
+      <option>Extreme</option>
+    </select>
+
+    <button class="add" onclick="openModal()">
+      + Add Feat
+    </button>
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+</main>
+
+<div id="modal" class="modal">
+
+  <div class="modal-box">
+
+    <h2 id="modalTitle">Add Feat</h2>
+
+    <form id="featForm">
+
+      <input type="hidden" id="editId">
+
+      <div class="row">
+
+        <div>
+          <label>FEAT NAME</label>
+          <input
+            id="name"
+            required
+            placeholder="Example: Dark Souls II SL1"
+          >
+        </div>
+
+        <div>
+          <label>GAME</label>
+          <input
+            id="game"
+            required
+            placeholder="Example: Dark Souls II"
+          >
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div>
+          <label>DIFFICULTY</label>
+
+          <select id="difficulty">
+            <option>Easy</option>
+            <option>Normal</option>
+            <option>Hard</option>
+            <option>Insane</option>
+            <option>Extreme</option>
+          </select>
+        </div>
+
+        <div>
+          <label>DATE COMPLETED</label>
+          <input id="date" type="date">
+        </div>
+
+      </div>
+
+      <div>
+        <label>DESCRIPTION</label>
+        <textarea
+          id="description"
+          placeholder="Describe the feat..."
+        ></textarea>
+      </div>
+
+      <div>
+        <label>PROOF URL</label>
+        <input
+          id="proof"
+          type="url"
+          placeholder="https://youtube.com/..."
+        >
+      </div>
+
+      <div class="form-buttons">
+        <button type="button" onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button class="add" type="submit">
+          Save Feat
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+
+const STORAGE_KEY = "oosmafeats";
+
+let feats = JSON.parse(
+  localStorage.getItem(STORAGE_KEY) || "[]"
+);
+
+function save() {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(feats)
+  );
+
+  render();
+}
+
+function openModal(id = null) {
+
+  document
+    .getElementById("modal")
+    .classList.add("open");
+
+  document.getElementById("editId").value = id || "";
+
+  document.getElementById("modalTitle").textContent =
+    id ? "Edit Feat" : "Add Feat";
+
+  if (id) {
+
+    const feat = feats.find(
+      f => f.id === id
+    );
+
+    document.getElementById("name").value =
+      feat.name;
+
+    document.getElementById("game").value =
+      feat.game;
+
+    document.getElementById("difficulty").value =
+      feat.difficulty;
+
+    document.getElementById("date").value =
+      feat.date || "";
+
+    document.getElementById("description").value =
+      feat.description || "";
+
+    document.getElementById("proof").value =
+      feat.proof || "";
+
+  } else {
+
+    document.getElementById("featForm").reset();
+
+  }
+
+  document.getElementById("name").focus();
+}
+
+function closeModal() {
+
+  document
+    .getElementById("modal")
+    .classList.remove("open");
+
+}
+
+document.getElementById("featForm").onsubmit =
+function(event) {
+
+  event.preventDefault();
+
+  const id =
+    document.getElementById("editId").value;
+
+  const feat = {
+
+    id: id || crypto.randomUUID(),
+
+    name:
+      document.getElementById("name").value.trim(),
+
+    game:
+      document.getElementById("game").value.trim(),
+
+    difficulty:
+      document.getElementById("difficulty").value,
+
+    date:
+      document.getElementById("date").value,
+
+    description:
+      document.getElementById("description").value.trim(),
+
+    proof:
+      document.getElementById("proof").value.trim()
+
+  };
+
+  if (id) {
+
+    feats = feats.map(
+      f => f.id === id ? feat : f
+    );
+
+  } else {
+
+    feats.unshift(feat);
+
+  }
+
+  save();
+  closeModal();
+
+};
+
+function deleteFeat(id) {
+
+  if (!confirm("Delete this feat?")) {
+    return;
+  }
+
+  feats =
+    feats.filter(f => f.id !== id);
+
+  save();
+}
+
+function escapeHTML(text) {
+
+  return String(text).replace(
+    /[&<>"']/g,
+    char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]
+  );
+
+}
+
+function render() {
+
+  const query =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase();
+
+  const difficulty =
+    document
+      .getElementById("filter")
+      .value;
+
+  const filtered =
+    feats.filter(feat => {
+
+      const matchesSearch =
+        !query ||
+        (
+          feat.name +
+          " " +
+          feat.game +
+          " " +
+          feat.description
+        )
+        .toLowerCase()
+        .includes(query);
+
+      const matchesDifficulty =
+        !difficulty ||
+        feat.difficulty === difficulty;
+
+      return matchesSearch &&
+             matchesDifficulty;
+
+    });
+
+  const grid =
+    document.getElementById("grid");
+
+  if (!filtered.length) {
+
+    grid.innerHTML = `
+      <div class="empty">
+        No feats yet.<br><br>
+        Click <b>+ Add Feat</b> to add one.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  grid.innerHTML =
+    filtered.map(feat => `
+
+      <article class="card">
+
+        <div class="game">
+          ${escapeHTML(feat.game)}
+        </div>
+
+        <div class="name">
+          ${escapeHTML(feat.name)}
+        </div>
+
+        <div>
+
+          <span class="pill">
+            ${escapeHTML(feat.difficulty)}
+          </span>
+
+          ${
+            feat.date
+            ? `
+              <span class="pill">
+                ${escapeHTML(feat.date)}
+              </span>
+            `
+            : ""
+          }
+
+        </div>
+
+        ${
+          feat.description
+          ? `
+            <div class="description">
+              ${escapeHTML(feat.description)}
+            </div>
+          `
+          : ""
+        }
+
+        <div class="actions">
+
+          ${
+            feat.proof
+            ? `
+              <a
+                class="proof"
+                href="${escapeHTML(feat.proof)}"
+                target="_blank"
+                rel="noopener"
+              >
+                <button type="button">
+                  Proof ↗
+                </button>
+              </a>
+            `
+            : ""
+          }
+
+          <button
+            type="button"
+            onclick="openModal('${feat.id}')"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onclick="deleteFeat('${feat.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+}
+
+document
+  .getElementById("search")
+  .addEventListener("input", render);
+
+document
+  .getElementById("filter")
+  .addEventListener("change", render);
+
+document
+  .getElementById("modal")
+  .addEventListener("click", event => {
+
+    if (event.target.id === "modal") {
+      closeModal();
+    }
+
+  });
+
+render();
+
+</script>
+
+</body>
+</html>
