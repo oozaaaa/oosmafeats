@@ -1174,10 +1174,109 @@ document
    UPLOAD IMAGE
 ========================= */
 
-async function uploadThumbnail(
-  file,
-  featId
-) {
+async function uploadThumbnail(file, featId) {
+
+  if (!file) {
+    return null;
+  }
+
+  // Make absolutely sure we have a current authenticated session
+  let {
+    data: { session },
+    error: sessionError
+  } = await supabaseClient.auth.getSession();
+
+  if (sessionError) {
+    throw sessionError;
+  }
+
+  if (!session) {
+    throw new Error("Your login session has expired. Please log in again.");
+  }
+
+  // Refresh the session if necessary
+  if (session.expires_at && session.expires_at * 1000 < Date.now() + 60000) {
+
+    const {
+      data: refreshed,
+      error: refreshError
+    } = await supabaseClient.auth.refreshSession();
+
+    if (refreshError) {
+      throw refreshError;
+    }
+
+    session = refreshed.session;
+
+    if (!session) {
+      throw new Error("Could not refresh your login session.");
+    }
+  }
+
+  // Make sure the logged-in account is actually the owner
+  if (session.user.id !== OWNER_ID) {
+    throw new Error("You are not authorized to upload images.");
+  }
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+  // Use the actual authenticated user's ID
+  const filePath =
+    session.user.id +
+    "/" +
+    featId +
+    "-" +
+    Date.now() +
+    "." +
+    extension;
+
+  console.log("Uploading image to:", filePath);
+  console.log("Authenticated user:", session.user.id);
+
+  const {
+    error: uploadError
+  } =
+    await supabaseClient
+      .storage
+      .from(IMAGE_BUCKET)
+      .upload(
+        filePath,
+        file,
+        {
+          upsert: false,
+          contentType: file.type,
+          cacheControl: "3600"
+        }
+      );
+
+  if (uploadError) {
+
+    console.error(
+      "Image upload failed:",
+      uploadError
+    );
+
+    throw uploadError;
+  }
+
+  const {
+    data
+  } =
+    supabaseClient
+      .storage
+      .from(IMAGE_BUCKET)
+      .getPublicUrl(filePath);
+
+  if (!data || !data.publicUrl) {
+    throw new Error("Image uploaded, but no public URL was returned.");
+  }
+
+  return data.publicUrl;
+}
 
   if (!file) {
     return null;
