@@ -55,7 +55,7 @@ main {
 .toolbar {
   display: flex;
   gap: 10px;
-  margin-bottom: 35px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
 }
 
@@ -98,15 +98,14 @@ button:disabled {
 .grid {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 /* =========================
-   DIFFICULTY TIER
+   DIFFICULTY CATEGORY
 ========================= */
 
 .tier {
-  margin: 42px 0 14px;
+  margin: 48px 0 18px;
 }
 
 .tier:first-child {
@@ -116,13 +115,18 @@ button:disabled {
 .tier-title {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+
   color: #aaa;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: 3px;
+  text-align: center;
 }
 
+.tier-title::before,
 .tier-title::after {
   content: "";
   height: 1px;
@@ -130,10 +134,8 @@ button:disabled {
   flex: 1;
 }
 
-.tier-number {
-  color: white;
-  font-size: 15px;
-  letter-spacing: 0;
+.tier-title span {
+  flex-shrink: 0;
 }
 
 /* =========================
@@ -143,9 +145,11 @@ button:disabled {
 .card {
   position: relative;
   overflow: hidden;
+
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
-  min-height: 235px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+
+  min-height: 245px;
   margin-bottom: 14px;
 
   background: #121217;
@@ -167,9 +171,36 @@ button:disabled {
 ========================= */
 
 .card-content {
-  padding: 24px 27px;
+  padding: 27px 30px;
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* POINTERCRATE-STYLE PLACEMENT NUMBER */
+
+.placement {
+  flex-shrink: 0;
+
+  min-width: 52px;
+
+  color: #777;
+  font-size: 27px;
+  font-weight: bold;
+  line-height: 1;
+
+  padding-top: 3px;
+  text-align: right;
+}
+
+.feat-info {
   min-width: 0;
 }
 
@@ -180,20 +211,24 @@ button:disabled {
 }
 
 .name {
-  font-size: 29px;
+  font-size: 30px;
   font-weight: bold;
   line-height: 1.15;
-  margin-bottom: 14px;
   color: #fff;
+  margin-bottom: 14px;
 }
 
 .description {
   color: #ccc;
   line-height: 1.55;
   font-size: 15px;
-  margin-bottom: 18px;
-  max-width: 800px;
+  margin: 0 0 20px;
+  max-width: 850px;
 }
+
+/* =========================
+   META
+========================= */
 
 .meta {
   display: flex;
@@ -201,24 +236,25 @@ button:disabled {
   flex-wrap: wrap;
   gap: 7px;
   margin-top: auto;
-  padding-top: 8px;
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
+
   background: #1b1b22;
   border: 1px solid #303039;
+
   border-radius: 20px;
   padding: 6px 10px;
+
   font-size: 12px;
   color: #ccc;
 }
 
-.rank-pill {
-  color: white;
-  font-weight: bold;
-  background: #202027;
+.proof {
+  color: #bbb;
+  text-decoration: none;
 }
 
 .actions {
@@ -233,60 +269,17 @@ button:disabled {
   padding: 7px 10px;
 }
 
-.proof {
-  color: #bbb;
-  text-decoration: none;
-}
-
-/* =========================
-   RANK
-========================= */
-
-.rank {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-
-  width: 52px;
-  height: 52px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 12px;
-
-  background: rgba(10, 10, 14, 0.88);
-  border: 1px solid #393941;
-
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-
-  z-index: 3;
-}
-
-.rank-label {
-  position: absolute;
-  top: 75px;
-  left: 20px;
-
-  color: #777;
-  font-size: 9px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-
-  z-index: 3;
-}
-
 /* =========================
    THUMBNAIL
 ========================= */
 
 .thumbnail {
   position: relative;
-  min-height: 235px;
+
+  min-height: 245px;
+
   overflow: hidden;
+
   background: #09090c;
   border-left: 1px solid #292931;
 }
@@ -294,13 +287,16 @@ button:disabled {
 .thumbnail img {
   width: 100%;
   height: 100%;
-  min-height: 235px;
+  min-height: 245px;
+
   display: block;
+
   object-fit: cover;
 }
 
 .thumbnail::after {
   content: "";
+
   position: absolute;
   inset: 0;
 
@@ -321,7 +317,9 @@ button:disabled {
 .empty {
   text-align: center;
   color: #777;
+
   padding: 70px 10px;
+
   border: 1px dashed #292931;
   border-radius: 14px;
 }
@@ -343,9 +341,12 @@ button:disabled {
 
 .image-preview {
   display: none;
+
   width: 100%;
   height: 150px;
+
   object-fit: cover;
+
   border-radius: 10px;
   border: 1px solid #303039;
 }
@@ -365,12 +366,17 @@ button:disabled {
 
 .modal {
   display: none;
+
   position: fixed;
   inset: 0;
+
   background: #000b;
+
   align-items: center;
   justify-content: center;
+
   padding: 20px;
+
   z-index: 100;
 }
 
@@ -381,10 +387,14 @@ button:disabled {
 .modal-box {
   width: min(520px, 100%);
   max-height: 90vh;
+
   overflow-y: auto;
+
   background: #111116;
+
   border: 1px solid #292931;
   border-radius: 16px;
+
   padding: 25px;
 }
 
@@ -437,8 +447,10 @@ textarea {
 
   .thumbnail {
     order: -1;
+
     height: 210px;
     min-height: 210px;
+
     border-left: none;
     border-bottom: 1px solid #292931;
   }
@@ -448,21 +460,16 @@ textarea {
   }
 
   .card-content {
-    padding: 20px;
+    padding: 22px;
   }
 
   .name {
-    font-size: 24px;
+    font-size: 25px;
   }
 
-  .rank {
-    top: 15px;
-    left: 15px;
-  }
-
-  .rank-label {
-    top: 70px;
-    left: 15px;
+  .placement {
+    min-width: 42px;
+    font-size: 23px;
   }
 }
 
@@ -478,6 +485,19 @@ textarea {
 
   main {
     width: 92%;
+  }
+
+  .card-top {
+    gap: 12px;
+  }
+
+  .placement {
+    min-width: 35px;
+    font-size: 20px;
+  }
+
+  .tier-title {
+    font-size: 14px;
   }
 }
 </style>
@@ -559,6 +579,7 @@ textarea {
       <div class="row">
 
         <div>
+
           <label>FEAT NAME</label>
 
           <input
@@ -566,9 +587,11 @@ textarea {
             required
             placeholder="Example: Dark Souls II SL1"
           >
+
         </div>
 
         <div>
+
           <label>GAME</label>
 
           <input
@@ -576,37 +599,24 @@ textarea {
             required
             placeholder="Example: Dark Souls II"
           >
+
         </div>
 
       </div>
 
-      <div class="row">
+      <div>
 
-        <div>
-          <label>DIFFICULTY</label>
+        <label>DIFFICULTY</label>
 
-          <select id="difficulty">
-            <option>Easy</option>
-            <option>Normal</option>
-            <option>Hard</option>
-            <option>Insane</option>
-            <option>Extreme</option>
-          </select>
-        </div>
+        <select id="difficulty">
 
-        <div>
-          <label>DIFFICULTY RANK (1–10)</label>
+          <option>Easy</option>
+          <option>Normal</option>
+          <option>Hard</option>
+          <option>Insane</option>
+          <option>Extreme</option>
 
-          <input
-            id="difficultyRank"
-            type="number"
-            min="1"
-            max="10"
-            value="5"
-            required
-          >
-
-        </div>
+        </select>
 
       </div>
 
@@ -803,6 +813,7 @@ async function checkAuth() {
     session ? session.user : null;
 
   updateAuthUI();
+
 }
 
 
@@ -993,10 +1004,9 @@ async function loadFeats() {
       .from("feats")
       .select("*")
       .order(
-        "difficulty_rank",
+        "created_at",
         {
-          ascending: false,
-          nullsFirst: false
+          ascending: true
         }
       );
 
@@ -1015,6 +1025,7 @@ async function loadFeats() {
     `;
 
     return;
+
   }
 
   feats =
@@ -1123,9 +1134,6 @@ function openModal(id = null) {
     document.getElementById("difficulty").value =
       feat.difficulty || "Normal";
 
-    document.getElementById("difficultyRank").value =
-      feat.difficulty_rank || 5;
-
     document.getElementById("date").value =
       feat.date || "";
 
@@ -1149,9 +1157,6 @@ function openModal(id = null) {
     document
       .getElementById("featForm")
       .reset();
-
-    document.getElementById("difficultyRank").value =
-      5;
 
   }
 
@@ -1279,17 +1284,21 @@ async function uploadThumbnail(
     sessionData.session;
 
   if (!session) {
+
     throw new Error(
       "Your login session has expired. Please log in again."
     );
+
   }
 
   if (
     session.user.id !== OWNER_ID
   ) {
+
     throw new Error(
       "You are not authorized to upload images."
     );
+
   }
 
   const extension =
@@ -1403,22 +1412,6 @@ document
             .getElementById("editId")
             .value;
 
-        let difficultyRank =
-          Number(
-            document
-              .getElementById("difficultyRank")
-              .value
-          );
-
-        difficultyRank =
-          Math.max(
-            1,
-            Math.min(
-              10,
-              difficultyRank || 5
-            )
-          );
-
         const featData = {
 
           name:
@@ -1437,9 +1430,6 @@ document
             document
               .getElementById("difficulty")
               .value,
-
-          difficulty_rank:
-            difficultyRank,
 
           date:
             document
@@ -1782,29 +1772,18 @@ function getYouTubeThumbnail(value) {
 
 
 /* =========================
-   TIER NAME
+   DIFFICULTY ORDER
 ========================= */
 
-function getTierName(rank) {
+const difficultyOrder = {
 
-  const tiers = {
+  "Extreme": 1,
+  "Insane": 2,
+  "Hard": 3,
+  "Normal": 4,
+  "Easy": 5
 
-    10: "LEGENDARY",
-    9: "EXTREME",
-    8: "VERY HARD",
-    7: "HARD",
-    6: "CHALLENGING",
-    5: "MODERATE",
-    4: "NORMAL",
-    3: "EASY",
-    2: "VERY EASY",
-    1: "TRIVIAL"
-
-  };
-
-  return tiers[rank] || "UNRANKED";
-
-}
+};
 
 
 /* =========================
@@ -1819,45 +1798,95 @@ function render() {
       .value
       .toLowerCase();
 
-  const difficulty =
+  const selectedDifficulty =
     document
       .getElementById("filter")
       .value;
 
+  /*
+   * FIRST:
+   * filter the feats
+   */
+
   const filtered =
-    feats
-      .filter(
-        feat => {
+    feats.filter(
+      feat => {
 
-          const matchesSearch =
-            !query ||
-            (
-              (feat.name || "") +
-              " " +
-              (feat.game || "") +
-              " " +
-              (feat.description || "")
-            )
-            .toLowerCase()
-            .includes(query);
+        const matchesSearch =
+          !query ||
+          (
+            (feat.name || "") +
+            " " +
+            (feat.game || "") +
+            " " +
+            (feat.description || "")
+          )
+          .toLowerCase()
+          .includes(query);
 
-          const matchesDifficulty =
-            !difficulty ||
-            feat.difficulty ===
-              difficulty;
+        const matchesDifficulty =
+          !selectedDifficulty ||
+          feat.difficulty ===
+            selectedDifficulty;
 
-          return (
-            matchesSearch &&
-            matchesDifficulty
-          );
+        return (
+          matchesSearch &&
+          matchesDifficulty
+        );
 
-        }
-      )
-      .sort(
-        (a, b) =>
-          (Number(b.difficulty_rank) || 0) -
-          (Number(a.difficulty_rank) || 0)
+      }
+    );
+
+  /*
+   * SORT BY DIFFICULTY
+   *
+   * Extreme first
+   * Insane second
+   * Hard third
+   * etc.
+   */
+
+  filtered.sort(
+    (a, b) => {
+
+      const aOrder =
+        difficultyOrder[
+          a.difficulty
+        ] || 999;
+
+      const bOrder =
+        difficultyOrder[
+          b.difficulty
+        ] || 999;
+
+      if (
+        aOrder !== bOrder
+      ) {
+
+        return (
+          aOrder -
+          bOrder
+        );
+
+      }
+
+      /*
+       * Within the same
+       * difficulty, newest
+       * feats appear first.
+       */
+
+      return (
+        new Date(
+          b.created_at || 0
+        ) -
+        new Date(
+          a.created_at || 0
+        )
       );
+
+    }
+  );
 
   const grid =
     document.getElementById(
@@ -1886,197 +1915,242 @@ function render() {
 
   }
 
+  /*
+   * DISPLAY NUMBER
+   *
+   * This is the important
+   * Pointercrate-style part.
+   *
+   * #1 = hardest
+   * #2 = second hardest
+   * etc.
+   *
+   * There is NO maximum.
+   */
+
   let html = "";
-  let currentTier = null;
 
-  filtered.forEach(feat => {
+  let placement =
+    1;
 
-    const rank =
-      Math.max(
-        1,
-        Math.min(
-          10,
-          Number(feat.difficulty_rank) || 5
-        )
-      );
+  let currentDifficulty =
+    null;
 
-    /* Add tier heading when rank changes */
+  filtered.forEach(
+    feat => {
 
-    if (rank !== currentTier) {
+      /*
+       * Add centered category
+       * whenever difficulty changes.
+       */
 
-      currentTier = rank;
+      if (
+        feat.difficulty !==
+        currentDifficulty
+      ) {
+
+        currentDifficulty =
+          feat.difficulty;
+
+        html += `
+
+          <div class="tier">
+
+            <div class="tier-title">
+
+              <span>
+                ${escapeHTML(
+                  currentDifficulty ||
+                  "UNRANKED"
+                )}
+              </span>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+      const proofURL =
+        safeURL(
+          feat.proof_url
+        );
+
+      /*
+       * Custom thumbnail first.
+       * YouTube thumbnail second.
+       */
+
+      const thumbnail =
+        safeURL(
+          feat.thumbnail_url
+        ) ||
+        getYouTubeThumbnail(
+          feat.proof_url
+        );
+
+      const thumbnailHTML =
+        thumbnail
+          ? `
+
+            <div class="thumbnail">
+
+              <img
+                src="${escapeHTML(thumbnail)}"
+                alt=""
+                loading="lazy"
+              >
+
+            </div>
+
+          `
+          : `
+
+            <div class="thumbnail"></div>
+
+          `;
 
       html += `
 
-        <div class="tier">
+        <article class="card">
 
-          <div class="tier-title">
+          <div class="card-content">
 
-            <span class="tier-number">
-              ${rank}/10
-            </span>
+            <div class="card-top">
 
-            <span>
-              ${getTierName(rank)}
-            </span>
+              <div class="placement">
+                #${placement}
+              </div>
+
+              <div class="feat-info">
+
+                <div class="game">
+                  ${escapeHTML(
+                    feat.game || ""
+                  )}
+                </div>
+
+                <div class="name">
+                  ${escapeHTML(
+                    feat.name || ""
+                  )}
+                </div>
+
+                ${
+                  feat.description
+                    ? `
+
+                      <div class="description">
+
+                        ${escapeHTML(
+                          feat.description
+                        )}
+
+                      </div>
+
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+
+            <div class="meta">
+
+              <span class="pill">
+
+                ${escapeHTML(
+                  feat.difficulty || ""
+                )}
+
+              </span>
+
+              ${
+                feat.date
+                  ? `
+
+                    <span class="pill">
+
+                      ${escapeHTML(
+                        feat.date
+                      )}
+
+                    </span>
+
+                  `
+                  : ""
+              }
+
+              ${
+                proofURL
+                  ? `
+
+                    <a
+                      class="proof"
+                      href="${escapeHTML(
+                        proofURL
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+
+                      <button type="button">
+                        Proof ↗
+                      </button>
+
+                    </a>
+
+                  `
+                  : ""
+              }
+
+            </div>
+
+            ${
+              currentUser &&
+              currentUser.id === OWNER_ID
+                ? `
+
+                  <div class="actions">
+
+                    <button
+                      type="button"
+                      onclick="openModal('${feat.id}')"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      onclick="deleteFeat('${feat.id}')"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                `
+                : ""
+            }
 
           </div>
 
-        </div>
+          ${thumbnailHTML}
+
+        </article>
 
       `;
 
+      placement++;
+
     }
+  );
 
-    const proofURL =
-      safeURL(
-        feat.proof_url
-      );
-
-    const thumbnail =
-      safeURL(
-        feat.thumbnail_url
-      ) ||
-      getYouTubeThumbnail(
-        feat.proof_url
-      );
-
-    const thumbnailHTML =
-      thumbnail
-        ? `
-          <div class="thumbnail">
-
-            <img
-              src="${escapeHTML(thumbnail)}"
-              alt=""
-              loading="lazy"
-            >
-
-          </div>
-        `
-        : `
-          <div class="thumbnail"></div>
-        `;
-
-    html += `
-
-      <article class="card">
-
-        <div class="rank">
-          ${rank}
-        </div>
-
-        <div class="rank-label">
-          RANK
-        </div>
-
-        <div class="card-content">
-
-          <div class="game">
-            ${escapeHTML(
-              feat.game || ""
-            )}
-          </div>
-
-          <div class="name">
-            ${escapeHTML(
-              feat.name || ""
-            )}
-          </div>
-
-          ${
-            feat.description
-              ? `
-                <div class="description">
-                  ${escapeHTML(
-                    feat.description
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-          <div class="meta">
-
-            <span class="pill">
-              ${escapeHTML(
-                feat.difficulty || ""
-              )}
-            </span>
-
-            <span class="pill rank-pill">
-              ${rank}/10
-            </span>
-
-            ${
-              feat.date
-                ? `
-                  <span class="pill">
-                    ${escapeHTML(
-                      feat.date
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-            ${
-              proofURL
-                ? `
-                  <a
-                    class="proof"
-                    href="${escapeHTML(
-                      proofURL
-                    )}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button type="button">
-                      Proof ↗
-                    </button>
-                  </a>
-                `
-                : ""
-            }
-
-          </div>
-
-          ${
-            currentUser &&
-            currentUser.id === OWNER_ID
-              ? `
-                <div class="actions">
-
-                  <button
-                    type="button"
-                    onclick="openModal('${feat.id}')"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    onclick="deleteFeat('${feat.id}')"
-                  >
-                    Delete
-                  </button>
-
-                </div>
-              `
-              : ""
-          }
-
-        </div>
-
-        ${thumbnailHTML}
-
-      </article>
-
-    `;
-
-  });
-
-  grid.innerHTML = html;
+  grid.innerHTML =
+    html;
 
 }
 
