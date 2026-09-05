@@ -114,66 +114,88 @@
     .feat {
       position: relative;
       display: grid;
-      grid-template-columns: 70px 1fr 240px;
+      grid-template-columns: 70px 1fr 460px;
       gap: 20px;
-      min-height: 190px;
+      align-items: start;
       background: #151515;
       border: 1px solid #292929;
       border-radius: 12px;
       margin-bottom: 12px;
-      overflow: hidden;
+      padding: 22px 24px;
+      overflow: visible;
+    }
+
+    .feat.clickable {
+      cursor: pointer;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .feat.clickable:hover {
+      border-color: #4a4a4a;
+      background: #191919;
     }
 
     .placement {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 25px;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       color: #777;
     }
 
     .feat-content {
-      padding: 22px 0;
       min-width: 0;
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .thumbnail {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-image: var(--thumbnail);
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
     }
 
     .feat-title {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: bold;
-      margin-bottom: 6px;
+      letter-spacing: -0.3px;
       word-break: break-word;
     }
 
     .game {
-      color: #aaa;
-      font-size: 14px;
-      margin-bottom: 15px;
+      color: #999;
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .description {
       color: #ccc;
+      font-size: 18px;
       line-height: 1.5;
       white-space: pre-wrap;
-      margin-bottom: 15px;
     }
 
     .meta {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 15px;
     }
 
     .tag {
       background: #242424;
       border: 1px solid #333;
       color: #ccc;
-      padding: 5px 9px;
+      padding: 6px 11px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 14px;
     }
 
     .actions {
@@ -195,15 +217,6 @@
     .move-buttons button {
       min-width: 35px;
       padding: 7px 8px;
-    }
-
-    .thumbnail {
-      min-height: 190px;
-      background-color: #101010;
-      background-image: var(--thumbnail);
-      background-size: cover;
-      background-position: center;
-      border-left: 1px solid #292929;
     }
 
     .modal {
@@ -263,11 +276,6 @@
       margin-top: 20px;
     }
 
-    .proof-link {
-      color: #fff;
-      text-decoration: underline;
-    }
-
     .empty {
       color: #666;
       text-align: center;
@@ -276,18 +284,13 @@
 
     @media (max-width: 800px) {
       .feat {
-        grid-template-columns: 55px 1fr;
+        grid-template-columns: 45px 1fr;
+        padding: 18px 16px;
       }
 
       .thumbnail {
-        grid-column: 2;
-        min-height: 180px;
-        border-left: 0;
-        border-top: 1px solid #292929;
-      }
-
-      .feat-content {
-        padding-right: 15px;
+        grid-column: 1 / -1;
+        order: 3;
       }
     }
   </style>
@@ -772,9 +775,20 @@
             : `--thumbnail: none;`;
 
 
+        const proofAttr =
+          feat.proof_url
+            ? escapeAttribute(feat.proof_url)
+            : "";
+
+        const clickableClass =
+          feat.proof_url ? " clickable" : "";
+
         html += `
 
-          <div class="feat">
+          <div
+            class="feat${clickableClass}"
+            data-proof-url="${proofAttr}"
+          >
 
             <div class="placement">
               #${rank}
@@ -796,9 +810,7 @@
 
               ${
                 feat.description
-                  ? `<div class="description">
-                      ${escapeHtml(feat.description)}
-                    </div>`
+                  ? `<div class="description">${escapeHtml(feat.description.trim())}</div>`
                   : ""
               }
 
@@ -819,28 +831,11 @@
               </div>
 
 
-              <div class="actions">
-
-                ${
-                  feat.proof_url
-                    ? `<a
-                        class="proof-link"
-                        href="${escapeAttribute(feat.proof_url)}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <button class="secondary">
-                          Proof
-                        </button>
-                       </a>`
-                    : ""
-                }
-
-
-                ${
-                  currentUser &&
-                  currentUser.id === OWNER_ID
-                    ? `
+              ${
+                currentUser &&
+                currentUser.id === OWNER_ID
+                  ? `
+                    <div class="actions">
 
                       <div class="move-buttons">
 
@@ -862,7 +857,6 @@
 
                       </div>
 
-
                       <button
                         class="secondary"
                         onclick="openEditModal('${feat.id}')"
@@ -877,11 +871,10 @@
                         Delete
                       </button>
 
-                    `
-                    : ""
-                }
-
-              </div>
+                    </div>
+                  `
+                  : ""
+              }
 
             </div>
 
@@ -908,6 +901,26 @@
 
     document.getElementById("featList")
       .innerHTML = html;
+
+    document
+      .querySelectorAll(".feat.clickable")
+      .forEach(card => {
+
+        card.addEventListener("click", event => {
+
+          if (event.target.closest("button, a")) {
+            return;
+          }
+
+          const url = card.dataset.proofUrl;
+
+          if (url) {
+            window.open(url, "_blank", "noopener");
+          }
+
+        });
+
+      });
   }
 
 
