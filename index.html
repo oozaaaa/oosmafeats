@@ -315,22 +315,40 @@ textarea {
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 
 const STORAGE_KEY = "oosmafeats";
 
-let feats = JSON.parse(
-  localStorage.getItem(STORAGE_KEY) || "[]"
+const SUPABASE_URL = "https://qptsfclqcoqmlsegkbpt.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
 );
 
-function save() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(feats)
-  );
+let feats = [];
 
+async function loadFeats() {
+  const { data, error } = await supabase
+    .from("feats")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to load feats:", error);
+    return;
+  }
+
+  feats = data || [];
   render();
 }
+
+loadFeats();
+
+
 
 function openModal(id = null) {
 
