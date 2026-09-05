@@ -20,6 +20,10 @@ body {
 header {
   padding: 45px 7% 30px;
   border-bottom: 1px solid #25252c;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .logo {
@@ -30,6 +34,17 @@ header {
 .subtitle {
   color: #888;
   margin-top: 6px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#authStatus {
+  color: #888;
+  font-size: 13px;
 }
 
 main {
@@ -63,6 +78,11 @@ button {
 
 button {
   cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .add {
@@ -142,6 +162,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  z-index: 100;
 }
 
 .modal.open {
@@ -187,9 +208,19 @@ textarea {
   gap: 8px;
 }
 
+.error {
+  color: #ff7777;
+  font-size: 13px;
+  display: none;
+}
+
 @media(max-width: 600px) {
   .row {
     grid-template-columns: 1fr;
+  }
+
+  header {
+    flex-direction: column;
   }
 }
 </style>
@@ -198,13 +229,30 @@ textarea {
 <body>
 
 <header>
-  <div class="logo">OOSMAFEATS</div>
-  <div class="subtitle">All my feats.</div>
+
+  <div>
+    <div class="logo">OOSMAFEATS</div>
+    <div class="subtitle">All my feats.</div>
+  </div>
+
+  <div class="header-actions">
+    <span id="authStatus">Not logged in</span>
+
+    <button
+      id="authButton"
+      type="button"
+      onclick="openAuthModal()"
+    >
+      Login
+    </button>
+  </div>
+
 </header>
 
 <main>
 
   <div class="toolbar">
+
     <input
       id="search"
       class="search"
@@ -220,14 +268,22 @@ textarea {
       <option>Extreme</option>
     </select>
 
-    <button class="add" onclick="openModal()">
+    <button
+      id="addButton"
+      class="add"
+      onclick="handleAddClick()"
+    >
       + Add Feat
     </button>
+
   </div>
 
   <div id="grid" class="grid"></div>
 
 </main>
+
+
+<!-- FEAT MODAL -->
 
 <div id="modal" class="modal">
 
@@ -243,6 +299,7 @@ textarea {
 
         <div>
           <label>FEAT NAME</label>
+
           <input
             id="name"
             required
@@ -252,6 +309,7 @@ textarea {
 
         <div>
           <label>GAME</label>
+
           <input
             id="game"
             required
@@ -264,49 +322,73 @@ textarea {
       <div class="row">
 
         <div>
+
           <label>DIFFICULTY</label>
 
           <select id="difficulty">
+
             <option>Easy</option>
             <option>Normal</option>
             <option>Hard</option>
             <option>Insane</option>
             <option>Extreme</option>
+
           </select>
+
         </div>
 
         <div>
+
           <label>DATE COMPLETED</label>
-          <input id="date" type="date">
+
+          <input
+            id="date"
+            type="date"
+          >
+
         </div>
 
       </div>
 
       <div>
+
         <label>DESCRIPTION</label>
+
         <textarea
           id="description"
           placeholder="Describe the feat..."
         ></textarea>
+
       </div>
 
       <div>
+
         <label>PROOF URL</label>
+
         <input
           id="proof"
           type="url"
           placeholder="https://youtube.com/..."
         >
+
       </div>
 
       <div class="form-buttons">
-        <button type="button" onclick="closeModal()">
+
+        <button
+          type="button"
+          onclick="closeModal()"
+        >
           Cancel
         </button>
 
-        <button class="add" type="submit">
+        <button
+          class="add"
+          type="submit"
+        >
           Save Feat
         </button>
+
       </div>
 
     </form>
@@ -315,84 +397,457 @@ textarea {
 
 </div>
 
+
+<!-- LOGIN MODAL -->
+
+<div id="authModal" class="modal">
+
+  <div class="modal-box">
+
+    <h2>Login</h2>
+
+    <form id="authForm">
+
+      <div>
+
+        <label>EMAIL</label>
+
+        <input
+          id="authEmail"
+          type="email"
+          required
+          placeholder="Your email"
+        >
+
+      </div>
+
+      <div>
+
+        <label>PASSWORD</label>
+
+        <input
+          id="authPassword"
+          type="password"
+          required
+          placeholder="Your password"
+        >
+
+      </div>
+
+      <div
+        id="authError"
+        class="error"
+      ></div>
+
+      <div class="form-buttons">
+
+        <button
+          type="button"
+          onclick="closeAuthModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="add"
+          type="submit"
+        >
+          Login
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-const STORAGE_KEY = "oosmafeats";
+const SUPABASE_URL =
+  "https://qptsfclqcoqmlsegkbpt.supabase.co";
 
-const SUPABASE_URL = "https://qptsfclqcoqmlsegkbpt.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+const OWNER_ID =
+  "d308964b-015f-48f1-a9b2-196c6812f654";
+
+const supabase =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
 
 let feats = [];
 
-async function loadFeats() {
-  const { data, error } = await supabase
-    .from("feats")
-    .select("*")
-    .order("created_at", { ascending: false });
+let currentUser = null;
 
-  if (error) {
-    console.error("Failed to load feats:", error);
-    return;
-  }
 
-  feats = data || [];
-  render();
+/* =========================
+   AUTH
+========================= */
+
+async function checkAuth() {
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  currentUser =
+    session ? session.user : null;
+
+  updateAuthUI();
+
 }
 
-loadFeats();
 
+supabase.auth.onAuthStateChange(
+  (_event, session) => {
+
+    currentUser =
+      session ? session.user : null;
+
+    updateAuthUI();
+
+  }
+);
+
+
+function updateAuthUI() {
+
+  const status =
+    document.getElementById("authStatus");
+
+  const button =
+    document.getElementById("authButton");
+
+  const addButton =
+    document.getElementById("addButton");
+
+
+  if (
+    currentUser &&
+    currentUser.id === OWNER_ID
+  ) {
+
+    status.textContent = "Logged in";
+
+    button.textContent = "Logout";
+
+    button.onclick = logout;
+
+    addButton.disabled = false;
+
+  } else {
+
+    status.textContent = "Not logged in";
+
+    button.textContent = "Login";
+
+    button.onclick = openAuthModal;
+
+    addButton.disabled = true;
+
+  }
+
+}
+
+
+function openAuthModal() {
+
+  document
+    .getElementById("authModal")
+    .classList.add("open");
+
+  document
+    .getElementById("authEmail")
+    .focus();
+
+}
+
+
+function closeAuthModal() {
+
+  document
+    .getElementById("authModal")
+    .classList.remove("open");
+
+  document
+    .getElementById("authError")
+    .style.display = "none";
+
+}
+
+
+async function logout() {
+
+  const { error } =
+    await supabase.auth.signOut();
+
+  if (error) {
+
+    alert(
+      "Logout failed: " +
+      error.message
+    );
+
+  }
+
+}
+
+
+document
+  .getElementById("authForm")
+  .addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+      const email =
+        document
+          .getElementById("authEmail")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("authPassword")
+          .value;
+
+      const errorBox =
+        document.getElementById("authError");
+
+      errorBox.style.display = "none";
+
+      const {
+        data,
+        error
+      } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) {
+
+        errorBox.textContent =
+          error.message;
+
+        errorBox.style.display =
+          "block";
+
+        return;
+
+      }
+
+      if (
+        !data.user ||
+        data.user.id !== OWNER_ID
+      ) {
+
+        await supabase.auth.signOut();
+
+        errorBox.textContent =
+          "This account is not authorized.";
+
+        errorBox.style.display =
+          "block";
+
+        return;
+
+      }
+
+      closeAuthModal();
+
+    }
+  );
+
+
+/* =========================
+   LOAD FEATS
+========================= */
+
+async function loadFeats() {
+
+  const {
+    data,
+    error
+  } =
+    await supabase
+      .from("feats")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+  if (error) {
+
+    console.error(
+      "Failed to load feats:",
+      error
+    );
+
+    document.getElementById("grid").innerHTML = `
+      <div class="empty">
+        Failed to load feats.<br><br>
+        Check the browser console for details.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  feats = data || [];
+
+  render();
+
+}
+
+
+/* =========================
+   ADD / EDIT MODAL
+========================= */
+
+function handleAddClick() {
+
+  if (!currentUser) {
+
+    openAuthModal();
+
+    return;
+
+  }
+
+  if (currentUser.id !== OWNER_ID) {
+
+    alert("You are not authorized.");
+
+    return;
+
+  }
+
+  openModal();
+
+}
 
 
 function openModal(id = null) {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    openAuthModal();
+
+    return;
+
+  }
+
 
   document
     .getElementById("modal")
     .classList.add("open");
 
-  document.getElementById("editId").value = id || "";
 
-  document.getElementById("modalTitle").textContent =
-    id ? "Edit Feat" : "Add Feat";
+  document
+    .getElementById("editId")
+    .value =
+    id !== null
+      ? String(id)
+      : "";
 
-  if (id) {
 
-    const feat = feats.find(
-      f => f.id === id
-    );
+  document
+    .getElementById("modalTitle")
+    .textContent =
+    id !== null
+      ? "Edit Feat"
+      : "Add Feat";
 
-    document.getElementById("name").value =
-      feat.name;
 
-    document.getElementById("game").value =
-      feat.game;
+  if (id !== null) {
 
-    document.getElementById("difficulty").value =
-      feat.difficulty;
+    const feat =
+      feats.find(
+        f =>
+          String(f.id) === String(id)
+      );
 
-    document.getElementById("date").value =
+
+    if (!feat) {
+
+      closeModal();
+
+      return;
+
+    }
+
+
+    document
+      .getElementById("name")
+      .value =
+      feat.name || "";
+
+
+    document
+      .getElementById("game")
+      .value =
+      feat.game || "";
+
+
+    document
+      .getElementById("difficulty")
+      .value =
+      feat.difficulty || "Normal";
+
+
+    document
+      .getElementById("date")
+      .value =
       feat.date || "";
 
-    document.getElementById("description").value =
+
+    document
+      .getElementById("description")
+      .value =
       feat.description || "";
 
-    document.getElementById("proof").value =
-      feat.proof || "";
+
+    document
+      .getElementById("proof")
+      .value =
+      feat.proof_url || "";
+
 
   } else {
 
-    document.getElementById("featForm").reset();
+    document
+      .getElementById("featForm")
+      .reset();
 
   }
 
-  document.getElementById("name").focus();
+
+  document
+    .getElementById("name")
+    .focus();
+
 }
+
 
 function closeModal() {
 
@@ -402,81 +857,216 @@ function closeModal() {
 
 }
 
-document.getElementById("featForm").onsubmit =
-function(event) {
 
-  event.preventDefault();
+/* =========================
+   SAVE FEAT
+========================= */
 
-  const id =
-    document.getElementById("editId").value;
+document
+  .getElementById("featForm")
+  .addEventListener(
+    "submit",
+    async event => {
 
-  const feat = {
+      event.preventDefault();
 
-    id: id || crypto.randomUUID(),
 
-    name:
-      document.getElementById("name").value.trim(),
+      if (
+        !currentUser ||
+        currentUser.id !== OWNER_ID
+      ) {
 
-    game:
-      document.getElementById("game").value.trim(),
+        alert(
+          "You must be logged in as the owner."
+        );
 
-    difficulty:
-      document.getElementById("difficulty").value,
+        return;
 
-    date:
-      document.getElementById("date").value,
+      }
 
-    description:
-      document.getElementById("description").value.trim(),
 
-    proof:
-      document.getElementById("proof").value.trim()
+      const id =
+        document
+          .getElementById("editId")
+          .value;
 
-  };
 
-  if (id) {
+      const featData = {
 
-    feats = feats.map(
-      f => f.id === id ? feat : f
+        name:
+          document
+            .getElementById("name")
+            .value
+            .trim(),
+
+        game:
+          document
+            .getElementById("game")
+            .value
+            .trim(),
+
+        difficulty:
+          document
+            .getElementById("difficulty")
+            .value,
+
+        date:
+          document
+            .getElementById("date")
+            .value || null,
+
+        description:
+          document
+            .getElementById("description")
+            .value
+            .trim(),
+
+        proof_url:
+          document
+            .getElementById("proof")
+            .value
+            .trim() || null
+
+      };
+
+
+      let error;
+
+
+      if (id) {
+
+        ({
+          error
+        } =
+          await supabase
+            .from("feats")
+            .update(featData)
+            .eq("id", id));
+
+      } else {
+
+        ({
+          error
+        } =
+          await supabase
+            .from("feats")
+            .insert(featData));
+
+      }
+
+
+      if (error) {
+
+        console.error(
+          "Failed to save feat:",
+          error
+        );
+
+        alert(
+          "Failed to save feat:\n\n" +
+          error.message
+        );
+
+        return;
+
+      }
+
+
+      closeModal();
+
+      await loadFeats();
+
+    }
+  );
+
+
+/* =========================
+   DELETE FEAT
+========================= */
+
+async function deleteFeat(id) {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    alert(
+      "You must be logged in as the owner."
     );
 
-  } else {
-
-    feats.unshift(feat);
-
-  }
-
-  save();
-  closeModal();
-
-};
-
-function deleteFeat(id) {
-
-  if (!confirm("Delete this feat?")) {
     return;
+
   }
 
-  feats =
-    feats.filter(f => f.id !== id);
 
-  save();
+  if (
+    !confirm(
+      "Delete this feat?"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabase
+      .from("feats")
+      .delete()
+      .eq("id", id);
+
+
+  if (error) {
+
+    console.error(
+      "Failed to delete feat:",
+      error
+    );
+
+    alert(
+      "Failed to delete feat:\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadFeats();
+
 }
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHTML(text) {
 
   return String(text).replace(
     /[&<>"']/g,
     char => ({
+
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
       "'": "&#039;"
+
     })[char]
   );
 
 }
+
+
+/* =========================
+   RENDER
+========================= */
 
 function render() {
 
@@ -486,10 +1076,12 @@ function render() {
       .value
       .toLowerCase();
 
+
   const difficulty =
     document
       .getElementById("filter")
       .value;
+
 
   const filtered =
     feats.filter(feat => {
@@ -497,33 +1089,43 @@ function render() {
       const matchesSearch =
         !query ||
         (
-          feat.name +
+          (feat.name || "") +
           " " +
-          feat.game +
+          (feat.game || "") +
           " " +
-          feat.description
+          (feat.description || "")
         )
         .toLowerCase()
         .includes(query);
+
 
       const matchesDifficulty =
         !difficulty ||
         feat.difficulty === difficulty;
 
-      return matchesSearch &&
-             matchesDifficulty;
+
+      return (
+        matchesSearch &&
+        matchesDifficulty
+      );
 
     });
 
+
   const grid =
     document.getElementById("grid");
+
 
   if (!filtered.length) {
 
     grid.innerHTML = `
       <div class="empty">
         No feats yet.<br><br>
-        Click <b>+ Add Feat</b> to add one.
+        ${
+          currentUser
+            ? 'Click <b>+ Add Feat</b> to add one.'
+            : 'Login to add a feat.'
+        }
       </div>
     `;
 
@@ -531,107 +1133,177 @@ function render() {
 
   }
 
+
   grid.innerHTML =
-    filtered.map(feat => `
+    filtered
+      .map(feat => `
 
-      <article class="card">
+        <article class="card">
 
-        <div class="game">
-          ${escapeHTML(feat.game)}
-        </div>
+          <div class="game">
+            ${escapeHTML(feat.game)}
+          </div>
 
-        <div class="name">
-          ${escapeHTML(feat.name)}
-        </div>
+          <div class="name">
+            ${escapeHTML(feat.name)}
+          </div>
 
-        <div>
+          <div>
 
-          <span class="pill">
-            ${escapeHTML(feat.difficulty)}
-          </span>
+            <span class="pill">
+              ${escapeHTML(feat.difficulty)}
+            </span>
+
+            ${
+              feat.date
+              ? `
+                <span class="pill">
+                  ${escapeHTML(feat.date)}
+                </span>
+              `
+              : ""
+            }
+
+          </div>
 
           ${
-            feat.date
+            feat.description
             ? `
-              <span class="pill">
-                ${escapeHTML(feat.date)}
-              </span>
+              <div class="description">
+                ${escapeHTML(
+                  feat.description
+                )}
+              </div>
             `
             : ""
           }
 
-        </div>
+          <div class="actions">
 
-        ${
-          feat.description
-          ? `
-            <div class="description">
-              ${escapeHTML(feat.description)}
-            </div>
-          `
-          : ""
-        }
+            ${
+              feat.proof_url
+              ? `
+                <a
+                  class="proof"
+                  href="${escapeHTML(
+                    feat.proof_url
+                  )}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <button type="button">
+                    Proof ↗
+                  </button>
+                </a>
+              `
+              : ""
+            }
 
-        <div class="actions">
-
-          ${
-            feat.proof
-            ? `
-              <a
-                class="proof"
-                href="${escapeHTML(feat.proof)}"
-                target="_blank"
-                rel="noopener"
-              >
-                <button type="button">
-                  Proof ↗
+            ${
+              currentUser &&
+              currentUser.id === OWNER_ID
+              ? `
+                <button
+                  type="button"
+                  onclick="openModal('${feat.id}')"
+                >
+                  Edit
                 </button>
-              </a>
-            `
-            : ""
-          }
 
-          <button
-            type="button"
-            onclick="openModal('${feat.id}')"
-          >
-            Edit
-          </button>
+                <button
+                  type="button"
+                  onclick="deleteFeat('${feat.id}')"
+                >
+                  Delete
+                </button>
+              `
+              : ""
+            }
 
-          <button
-            type="button"
-            onclick="deleteFeat('${feat.id}')"
-          >
-            Delete
-          </button>
+          </div>
 
-        </div>
+        </article>
 
-      </article>
-
-    `).join("");
+      `)
+      .join("");
 
 }
 
+
+/* =========================
+   SEARCH / FILTER
+========================= */
+
 document
   .getElementById("search")
-  .addEventListener("input", render);
+  .addEventListener(
+    "input",
+    render
+  );
+
 
 document
   .getElementById("filter")
-  .addEventListener("change", render);
+  .addEventListener(
+    "change",
+    render
+  );
+
+
+/* =========================
+   MODAL BACKDROPS
+========================= */
 
 document
   .getElementById("modal")
-  .addEventListener("click", event => {
+  .addEventListener(
+    "click",
+    event => {
 
-    if (event.target.id === "modal") {
-      closeModal();
+      if (
+        event.target.id === "modal"
+      ) {
+
+        closeModal();
+
+      }
+
     }
+  );
 
-  });
 
-render();
+document
+  .getElementById("authModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target.id === "authModal"
+      ) {
+
+        closeAuthModal();
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   START
+========================= */
+
+async function startApp() {
+
+  await checkAuth();
+
+  await loadFeats();
+
+}
+
+
+startApp();
 
 </script>
 
