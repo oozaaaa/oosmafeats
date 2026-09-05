@@ -1312,6 +1312,267 @@ async function moveFeat(id, direction) {
   }
 
   /*
+   * Sort everything by difficulty first,
+   * then by placement.
+   */
+  const difficultyOrder = {
+    Extreme: 1,
+    Insane: 2,
+    Hard: 3,
+    Normal: 4,
+    Easy: 5
+  };
+
+  const ordered = [...feats].sort((a, b) => {
+
+    const aDiff =
+      difficultyOrder[a.difficulty] || 999;
+
+    const bDiff =
+      difficultyOrder[b.difficulty] || 999;
+
+    if (aDiff !== bDiff) {
+      return aDiff - bDiff;
+    }
+
+    /*
+     * Existing placement.
+     * NULL placements are placed at the bottom.
+     */
+    const aPlace =
+      a.placement == null
+        ? 999999
+        : Number(a.placement);
+
+    const bPlace =
+      b.placement == null
+        ? 999999
+        : Number(b.placement);
+
+    return aPlace - bPlace;
+  });
+
+
+  /*
+   * Find the feat being moved.
+   */
+  const index =
+    ordered.findIndex(
+      feat =>
+        String(feat.id) === String(id)
+    );
+
+  if (index === -1) {
+    return;
+  }
+
+
+  const current =
+    ordered[index];
+
+
+  /*
+   * Find the neighboring feat
+   * in the SAME difficulty.
+   */
+  let targetIndex =
+    direction === "up"
+      ? index - 1
+      : index + 1;
+
+
+  while (
+    targetIndex >= 0 &&
+    targetIndex < ordered.length &&
+    ordered[targetIndex].difficulty !==
+      current.difficulty
+  ) {
+
+    targetIndex +=
+      direction === "up"
+        ? -1
+        : 1;
+
+  }
+
+
+  if (
+    targetIndex < 0 ||
+    targetIndex >= ordered.length
+  ) {
+    return;
+  }
+
+
+  const target =
+    ordered[targetIndex];
+
+
+  /*
+   * Give every feat in this difficulty
+   * a proper placement number if it
+   * doesn't already have one.
+   */
+  const tierFeats =
+    ordered.filter(
+      feat =>
+        feat.difficulty ===
+        current.difficulty
+    );
+
+
+  /*
+   * Assign clean sequential numbers.
+   */
+  for (
+    let i = 0;
+    i < tierFeats.length;
+    i++
+  ) {
+
+    if (
+      tierFeats[i].placement == null
+    ) {
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from("feats")
+          .update({
+            placement: i + 1
+          })
+          .eq(
+            "id",
+            tierFeats[i].id
+          );
+
+      if (error) {
+        throw error;
+      }
+
+      tierFeats[i].placement =
+        i + 1;
+    }
+  }
+
+
+  /*
+   * Re-sort now that NULL values
+   * have been given placements.
+   */
+  tierFeats.sort(
+    (a, b) =>
+      Number(a.placement) -
+      Number(b.placement)
+  );
+
+
+  const currentTierIndex =
+    tierFeats.findIndex(
+      feat =>
+        String(feat.id) ===
+        String(current.id)
+    );
+
+
+  const targetTierIndex =
+    tierFeats.findIndex(
+      feat =>
+        String(feat.id) ===
+        String(target.id)
+    );
+
+
+  if (
+    currentTierIndex === -1 ||
+    targetTierIndex === -1
+  ) {
+    return;
+  }
+
+
+  /*
+   * Swap their placement numbers.
+   */
+  const currentPlacement =
+    Number(
+      tierFeats[currentTierIndex]
+        .placement
+    );
+
+  const targetPlacement =
+    Number(
+      tierFeats[targetTierIndex]
+        .placement
+    );
+
+
+  let {
+    error: firstError
+  } =
+    await supabaseClient
+      .from("feats")
+      .update({
+        placement:
+          targetPlacement
+      })
+      .eq(
+        "id",
+        current.id
+      );
+
+
+  if (firstError) {
+
+    console.error(firstError);
+
+    alert(
+      "Failed to move feat:\n\n" +
+      firstError.message
+    );
+
+    return;
+  }
+
+
+  let {
+    error: secondError
+  } =
+    await supabaseClient
+      .from("feats")
+      .update({
+        placement:
+          currentPlacement
+      })
+      .eq(
+        "id",
+        target.id
+      );
+
+
+  if (secondError) {
+
+    console.error(secondError);
+
+    alert(
+      "Failed to move feat:\n\n" +
+      secondError.message
+    );
+
+    return;
+  }
+
+
+  /*
+   * Reload everything so the new
+   * order is displayed immediately.
+   */
+  await loadFeats();
+
+}
+
+  /*
    * Get the current ordering.
    */
 
