@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oosmafeats</title>
+<title>OOSMAFEATS</title>
 
 <style>
 * {
@@ -23,7 +23,6 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 20px;
 }
 
 .logo {
@@ -71,6 +70,13 @@ button {
   padding: 11px 13px;
 }
 
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #555562;
+}
+
 .search {
   flex: 1;
   min-width: 220px;
@@ -80,8 +86,12 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  border-color: #555562;
+}
+
 button:disabled {
-  opacity: 0.45;
+  opacity: .45;
   cursor: not-allowed;
 }
 
@@ -92,17 +102,13 @@ button:disabled {
 }
 
 /* =========================
-   FEAT LIST
+   DIFFICULTY SECTIONS
 ========================= */
 
 .grid {
   display: flex;
   flex-direction: column;
 }
-
-/* =========================
-   DIFFICULTY CATEGORY
-========================= */
 
 .tier {
   margin: 48px 0 18px;
@@ -117,13 +123,10 @@ button:disabled {
   align-items: center;
   justify-content: center;
   gap: 18px;
-  width: 100%;
-
   color: #aaa;
   font-size: 16px;
   font-weight: bold;
   letter-spacing: 3px;
-  text-align: center;
 }
 
 .tier-title::before,
@@ -134,31 +137,20 @@ button:disabled {
   flex: 1;
 }
 
-.tier-title span {
-  flex-shrink: 0;
-}
-
 /* =========================
    FEAT CARD
 ========================= */
 
 .card {
-  position: relative;
-  overflow: hidden;
-
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
-
   min-height: 245px;
   margin-bottom: 14px;
-
   background: #121217;
   border: 1px solid #292931;
   border-radius: 14px;
-
-  transition:
-    border-color 0.15s ease,
-    transform 0.15s ease;
+  overflow: hidden;
+  transition: border-color .15s, transform .15s;
 }
 
 .card:hover {
@@ -166,14 +158,9 @@ button:disabled {
   transform: translateY(-1px);
 }
 
-/* =========================
-   CARD CONTENT
-========================= */
-
 .card-content {
   padding: 27px 30px;
   min-width: 0;
-
   display: flex;
   flex-direction: column;
 }
@@ -184,19 +171,13 @@ button:disabled {
   gap: 18px;
 }
 
-/* POINTERCRATE-STYLE PLACEMENT NUMBER */
-
 .placement {
   flex-shrink: 0;
-
-  min-width: 52px;
-
+  min-width: 55px;
+  padding-top: 3px;
   color: #777;
   font-size: 27px;
   font-weight: bold;
-  line-height: 1;
-
-  padding-top: 3px;
   text-align: right;
 }
 
@@ -223,12 +204,7 @@ button:disabled {
   line-height: 1.55;
   font-size: 15px;
   margin: 0 0 20px;
-  max-width: 850px;
 }
-
-/* =========================
-   META
-========================= */
 
 .meta {
   display: flex;
@@ -241,19 +217,15 @@ button:disabled {
 .pill {
   display: inline-flex;
   align-items: center;
-
   background: #1b1b22;
   border: 1px solid #303039;
-
   border-radius: 20px;
   padding: 6px 10px;
-
   font-size: 12px;
   color: #ccc;
 }
 
 .proof {
-  color: #bbb;
   text-decoration: none;
 }
 
@@ -269,17 +241,27 @@ button:disabled {
   padding: 7px 10px;
 }
 
+/* RANK MOVEMENT BUTTONS */
+
+.move-button {
+  min-width: 34px;
+  padding: 6px 9px !important;
+  font-size: 15px !important;
+  line-height: 1;
+}
+
+.move-button:hover {
+  background: #22222a;
+}
+
 /* =========================
    THUMBNAIL
 ========================= */
 
 .thumbnail {
   position: relative;
-
   min-height: 245px;
-
   overflow: hidden;
-
   background: #09090c;
   border-left: 1px solid #292931;
 }
@@ -288,26 +270,8 @@ button:disabled {
   width: 100%;
   height: 100%;
   min-height: 245px;
-
   display: block;
-
   object-fit: cover;
-}
-
-.thumbnail::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(18,18,23,0.35),
-      rgba(18,18,23,0)
-    );
-
-  pointer-events: none;
 }
 
 /* =========================
@@ -317,47 +281,9 @@ button:disabled {
 .empty {
   text-align: center;
   color: #777;
-
   padding: 70px 10px;
-
   border: 1px dashed #292931;
   border-radius: 14px;
-}
-
-/* =========================
-   IMAGE UPLOAD
-========================= */
-
-.image-upload {
-  display: grid;
-  gap: 8px;
-}
-
-.image-upload input[type="file"] {
-  width: 100%;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.image-preview {
-  display: none;
-
-  width: 100%;
-  height: 150px;
-
-  object-fit: cover;
-
-  border-radius: 10px;
-  border: 1px solid #303039;
-}
-
-.image-preview.show {
-  display: block;
-}
-
-.image-help {
-  color: #777;
-  font-size: 11px;
 }
 
 /* =========================
@@ -366,17 +292,12 @@ button:disabled {
 
 .modal {
   display: none;
-
   position: fixed;
   inset: 0;
-
   background: #000b;
-
   align-items: center;
   justify-content: center;
-
   padding: 20px;
-
   z-index: 100;
 }
 
@@ -387,14 +308,10 @@ button:disabled {
 .modal-box {
   width: min(520px, 100%);
   max-height: 90vh;
-
   overflow-y: auto;
-
   background: #111116;
-
   border: 1px solid #292931;
   border-radius: 16px;
-
   padding: 25px;
 }
 
@@ -435,22 +352,37 @@ textarea {
   display: none;
 }
 
+.image-preview {
+  display: none;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #303039;
+}
+
+.image-preview.show {
+  display: block;
+}
+
+.image-help {
+  color: #777;
+  font-size: 11px;
+}
+
 /* =========================
    MOBILE
 ========================= */
 
 @media(max-width: 750px) {
-
   .card {
     grid-template-columns: 1fr;
   }
 
   .thumbnail {
     order: -1;
-
     height: 210px;
     min-height: 210px;
-
     border-left: none;
     border-bottom: 1px solid #292931;
   }
@@ -466,38 +398,25 @@ textarea {
   .name {
     font-size: 25px;
   }
-
-  .placement {
-    min-width: 42px;
-    font-size: 23px;
-  }
 }
 
 @media(max-width: 600px) {
-
   .row {
     grid-template-columns: 1fr;
   }
 
   header {
     flex-direction: column;
+    gap: 20px;
   }
 
   main {
     width: 92%;
   }
 
-  .card-top {
-    gap: 12px;
-  }
-
   .placement {
-    min-width: 35px;
-    font-size: 20px;
-  }
-
-  .tier-title {
-    font-size: 14px;
+    min-width: 40px;
+    font-size: 22px;
   }
 }
 </style>
@@ -513,19 +432,10 @@ textarea {
   </div>
 
   <div class="header-actions">
-
-    <span id="authStatus">
-      Not logged in
-    </span>
-
-    <button
-      id="authButton"
-      type="button"
-      onclick="openAuthModal()"
-    >
+    <span id="authStatus">Not logged in</span>
+    <button id="authButton" type="button" onclick="openAuthModal()">
       Login
     </button>
-
   </div>
 
 </header>
@@ -564,7 +474,10 @@ textarea {
 
 </main>
 
-<!-- FEAT MODAL -->
+
+<!-- =========================
+     FEAT MODAL
+========================= -->
 
 <div id="modal" class="modal">
 
@@ -579,79 +492,46 @@ textarea {
       <div class="row">
 
         <div>
-
           <label>FEAT NAME</label>
-
-          <input
-            id="name"
-            required
-            placeholder="Example: Dark Souls II SL1"
-          >
-
+          <input id="name" required>
         </div>
 
         <div>
-
           <label>GAME</label>
-
-          <input
-            id="game"
-            required
-            placeholder="Example: Dark Souls II"
-          >
-
+          <input id="game" required>
         </div>
 
       </div>
 
       <div>
-
         <label>DIFFICULTY</label>
 
         <select id="difficulty">
-
           <option>Easy</option>
           <option>Normal</option>
           <option>Hard</option>
           <option>Insane</option>
           <option>Extreme</option>
-
         </select>
-
       </div>
 
       <div>
-
         <label>DATE COMPLETED</label>
-
-        <input
-          id="date"
-          type="date"
-        >
-
+        <input id="date" type="date">
       </div>
 
       <div>
-
         <label>DESCRIPTION</label>
-
-        <textarea
-          id="description"
-          placeholder="Describe the feat..."
-        ></textarea>
-
+        <textarea id="description"></textarea>
       </div>
 
       <div>
-
         <label>PROOF URL</label>
-
         <input
           id="proof"
           type="url"
           placeholder="https://youtube.com/..."
         >
-
       </div>
 
       <div class="image-upload">
@@ -665,32 +545,24 @@ textarea {
         >
 
         <div class="image-help">
-          Upload an image to use on the right side of the feat card.
-          If you upload one, it will override the YouTube thumbnail.
+          Upload an image to use on the right side of the feat.
         </div>
 
         <img
           id="imagePreview"
           class="image-preview"
-          alt="Thumbnail preview"
+          alt=""
         >
 
       </div>
 
       <div class="form-buttons">
 
-        <button
-          type="button"
-          onclick="closeModal()"
-        >
+        <button type="button" onclick="closeModal()">
           Cancel
         </button>
 
-        <button
-          class="add"
-          type="submit"
-          id="saveButton"
-        >
+        <button class="add" type="submit" id="saveButton">
           Save Feat
         </button>
 
@@ -702,7 +574,10 @@ textarea {
 
 </div>
 
-<!-- LOGIN MODAL -->
+
+<!-- =========================
+     LOGIN MODAL
+========================= -->
 
 <div id="authModal" class="modal">
 
@@ -713,49 +588,24 @@ textarea {
     <form id="authForm">
 
       <div>
-
         <label>EMAIL</label>
-
-        <input
-          id="authEmail"
-          type="email"
-          required
-          placeholder="Your email"
-        >
-
+        <input id="authEmail" type="email" required>
       </div>
 
       <div>
-
         <label>PASSWORD</label>
-
-        <input
-          id="authPassword"
-          type="password"
-          required
-          placeholder="Your password"
-        >
-
+        <input id="authPassword" type="password" required>
       </div>
 
-      <div
-        id="authError"
-        class="error"
-      ></div>
+      <div id="authError" class="error"></div>
 
       <div class="form-buttons">
 
-        <button
-          type="button"
-          onclick="closeAuthModal()"
-        >
+        <button type="button" onclick="closeAuthModal()">
           Cancel
         </button>
 
-        <button
-          class="add"
-          type="submit"
-        >
+        <button class="add" type="submit">
           Login
         </button>
 
@@ -766,6 +616,7 @@ textarea {
   </div>
 
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -806,14 +657,12 @@ async function checkAuth() {
 
   const {
     data: { session }
-  } =
-    await supabaseClient.auth.getSession();
+  } = await supabaseClient.auth.getSession();
 
   currentUser =
     session ? session.user : null;
 
   updateAuthUI();
-
 }
 
 
@@ -883,10 +732,6 @@ function openAuthModal() {
     .getElementById("authModal")
     .classList.add("open");
 
-  document
-    .getElementById("authEmail")
-    .focus();
-
 }
 
 
@@ -896,30 +741,19 @@ function closeAuthModal() {
     .getElementById("authModal")
     .classList.remove("open");
 
-  document
-    .getElementById("authError")
-    .style.display =
-      "none";
-
 }
 
 
 async function logout() {
 
-  const { error } =
-    await supabaseClient.auth.signOut();
-
-  if (error) {
-
-    alert(
-      "Logout failed: " +
-      error.message
-    );
-
-  }
+  await supabaseClient.auth.signOut();
 
 }
 
+
+/* =========================
+   LOGIN
+========================= */
 
 document
   .getElementById("authForm")
@@ -930,21 +764,15 @@ document
       event.preventDefault();
 
       const email =
-        document
-          .getElementById("authEmail")
-          .value
-          .trim();
+        document.getElementById("authEmail").value;
 
       const password =
-        document
-          .getElementById("authPassword")
-          .value;
+        document.getElementById("authPassword").value;
 
       const errorBox =
         document.getElementById("authError");
 
-      errorBox.style.display =
-        "none";
+      errorBox.style.display = "none";
 
       const {
         data,
@@ -964,7 +792,6 @@ document
           "block";
 
         return;
-
       }
 
       if (
@@ -981,7 +808,6 @@ document
           "block";
 
         return;
-
       }
 
       closeAuthModal();
@@ -991,7 +817,7 @@ document
 
 
 /* =========================
-   LOAD FEATS
+   LOAD
 ========================= */
 
 async function loadFeats() {
@@ -1005,27 +831,20 @@ async function loadFeats() {
       .select("*")
       .order(
         "created_at",
-        {
-          ascending: true
-        }
+        { ascending: true }
       );
 
   if (error) {
 
-    console.error(
-      "Failed to load feats:",
-      error
-    );
+    console.error(error);
 
     document.getElementById("grid").innerHTML = `
       <div class="empty">
-        Failed to load feats.<br><br>
-        Check the browser console for details.
+        Failed to load feats.
       </div>
     `;
 
     return;
-
   }
 
   feats =
@@ -1037,26 +856,17 @@ async function loadFeats() {
 
 
 /* =========================
-   ADD / EDIT
+   MODAL
 ========================= */
 
 function handleAddClick() {
 
-  if (!currentUser) {
-
-    openAuthModal();
-    return;
-
-  }
-
   if (
+    !currentUser ||
     currentUser.id !== OWNER_ID
   ) {
 
-    alert(
-      "You are not authorized."
-    );
-
+    openAuthModal();
     return;
 
   }
@@ -1085,9 +895,7 @@ function openModal(id = null) {
   document
     .getElementById("editId")
     .value =
-    id !== null
-      ? String(id)
-      : "";
+    id !== null ? id : "";
 
   document
     .getElementById("modalTitle")
@@ -1096,13 +904,11 @@ function openModal(id = null) {
       ? "Edit Feat"
       : "Add Feat";
 
-  selectedThumbnailFile =
-    null;
+  selectedThumbnailFile = null;
 
   document
     .getElementById("thumbnailFile")
-    .value =
-    "";
+    .value = "";
 
   const preview =
     document.getElementById("imagePreview");
@@ -1114,15 +920,12 @@ function openModal(id = null) {
 
     const feat =
       feats.find(
-        f =>
-          String(f.id) === String(id)
+        f => String(f.id) === String(id)
       );
 
     if (!feat) {
-
       closeModal();
       return;
-
     }
 
     document.getElementById("name").value =
@@ -1160,10 +963,6 @@ function openModal(id = null) {
 
   }
 
-  document
-    .getElementById("name")
-    .focus();
-
 }
 
 
@@ -1177,7 +976,7 @@ function closeModal() {
 
 
 /* =========================
-   IMAGE PREVIEW
+   IMAGE
 ========================= */
 
 document
@@ -1191,45 +990,12 @@ document
 
       if (!file) {
 
-        selectedThumbnailFile =
-          null;
-
+        selectedThumbnailFile = null;
         return;
 
       }
 
-      if (
-        !file.type.startsWith("image/")
-      ) {
-
-        alert(
-          "Please select an image file."
-        );
-
-        event.target.value =
-          "";
-
-        return;
-
-      }
-
-      if (
-        file.size > 10 * 1024 * 1024
-      ) {
-
-        alert(
-          "Image must be smaller than 10 MB."
-        );
-
-        event.target.value =
-          "";
-
-        return;
-
-      }
-
-      selectedThumbnailFile =
-        file;
+      selectedThumbnailFile = file;
 
       const reader =
         new FileReader();
@@ -1245,9 +1011,7 @@ document
           preview.src =
             e.target.result;
 
-          preview.classList.add(
-            "show"
-          );
+          preview.classList.add("show");
 
         };
 
@@ -1257,48 +1021,22 @@ document
   );
 
 
-/* =========================
-   UPLOAD IMAGE
-========================= */
-
-async function uploadThumbnail(
-  file,
-  featId
-) {
+async function uploadThumbnail(file, featId) {
 
   if (!file) {
     return null;
   }
 
   const {
-    data: sessionData,
-    error: sessionError
+    data: sessionData
   } =
     await supabaseClient.auth.getSession();
-
-  if (sessionError) {
-    throw sessionError;
-  }
 
   const session =
     sessionData.session;
 
   if (!session) {
-
-    throw new Error(
-      "Your login session has expired. Please log in again."
-    );
-
-  }
-
-  if (
-    session.user.id !== OWNER_ID
-  ) {
-
-    throw new Error(
-      "You are not authorized to upload images."
-    );
-
+    throw new Error("Login session expired.");
   }
 
   const extension =
@@ -1317,7 +1055,7 @@ async function uploadThumbnail(
     extension;
 
   const {
-    error: uploadError
+    error
   } =
     await supabaseClient
       .storage
@@ -1327,20 +1065,12 @@ async function uploadThumbnail(
         file,
         {
           upsert: false,
-          contentType: file.type,
-          cacheControl: "3600"
+          contentType: file.type
         }
       );
 
-  if (uploadError) {
-
-    console.error(
-      "Image upload failed:",
-      uploadError
-    );
-
-    throw uploadError;
-
+  if (error) {
+    throw error;
   }
 
   const {
@@ -1349,20 +1079,7 @@ async function uploadThumbnail(
     supabaseClient
       .storage
       .from(IMAGE_BUCKET)
-      .getPublicUrl(
-        filePath
-      );
-
-  if (
-    !data ||
-    !data.publicUrl
-  ) {
-
-    throw new Error(
-      "Image uploaded, but no public URL was returned."
-    );
-
-  }
+      .getPublicUrl(filePath);
 
   return data.publicUrl;
 
@@ -1370,7 +1087,7 @@ async function uploadThumbnail(
 
 
 /* =========================
-   SAVE FEAT
+   SAVE
 ========================= */
 
 document
@@ -1386,31 +1103,21 @@ document
         currentUser.id !== OWNER_ID
       ) {
 
-        alert(
-          "You must be logged in as the owner."
-        );
-
+        alert("You must be logged in.");
         return;
 
       }
 
       const saveButton =
-        document.getElementById(
-          "saveButton"
-        );
+        document.getElementById("saveButton");
 
-      saveButton.disabled =
-        true;
-
-      saveButton.textContent =
-        "Saving...";
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving...";
 
       try {
 
         const id =
-          document
-            .getElementById("editId")
-            .value;
+          document.getElementById("editId").value;
 
         const featData = {
 
@@ -1452,12 +1159,14 @@ document
 
         };
 
-        let savedFeatId =
-          id;
-
-        /* ADD */
+        let savedId = id;
 
         if (!id) {
+
+          /*
+           * New feats start at the
+           * bottom of their difficulty.
+           */
 
           const {
             data,
@@ -1465,9 +1174,10 @@ document
           } =
             await supabaseClient
               .from("feats")
-              .insert(
-                featData
-              )
+              .insert({
+                ...featData,
+                placement: 999999
+              })
               .select()
               .single();
 
@@ -1475,27 +1185,18 @@ document
             throw error;
           }
 
-          savedFeatId =
+          savedId =
             data.id;
 
-        }
-
-        /* EDIT */
-
-        else {
+        } else {
 
           const {
             error
           } =
             await supabaseClient
               .from("feats")
-              .update(
-                featData
-              )
-              .eq(
-                "id",
-                id
-              );
+              .update(featData)
+              .eq("id", id);
 
           if (error) {
             throw error;
@@ -1503,16 +1204,12 @@ document
 
         }
 
-        /* UPLOAD THUMBNAIL */
-
-        if (
-          selectedThumbnailFile
-        ) {
+        if (selectedThumbnailFile) {
 
           const thumbnailURL =
             await uploadThumbnail(
               selectedThumbnailFile,
-              savedFeatId
+              savedId
             );
 
           const {
@@ -1526,7 +1223,7 @@ document
               })
               .eq(
                 "id",
-                savedFeatId
+                savedId
               );
 
           if (error) {
@@ -1537,17 +1234,13 @@ document
 
         closeModal();
 
-        selectedThumbnailFile =
-          null;
+        selectedThumbnailFile = null;
 
         await loadFeats();
 
       } catch (error) {
 
-        console.error(
-          "Failed to save feat:",
-          error
-        );
+        console.error(error);
 
         alert(
           "Failed to save feat:\n\n" +
@@ -1556,11 +1249,8 @@ document
 
       } finally {
 
-        saveButton.disabled =
-          false;
-
-        saveButton.textContent =
-          "Save Feat";
+        saveButton.disabled = false;
+        saveButton.textContent = "Save Feat";
 
       }
 
@@ -1578,23 +1268,11 @@ async function deleteFeat(id) {
     !currentUser ||
     currentUser.id !== OWNER_ID
   ) {
-
-    alert(
-      "You must be logged in as the owner."
-    );
-
     return;
-
   }
 
-  if (
-    !confirm(
-      "Delete this feat?"
-    )
-  ) {
-
+  if (!confirm("Delete this feat?")) {
     return;
-
   }
 
   const {
@@ -1603,17 +1281,9 @@ async function deleteFeat(id) {
     await supabaseClient
       .from("feats")
       .delete()
-      .eq(
-        "id",
-        id
-      );
+      .eq("id", id);
 
   if (error) {
-
-    console.error(
-      "Failed to delete feat:",
-      error
-    );
 
     alert(
       "Failed to delete feat:\n\n" +
@@ -1621,7 +1291,6 @@ async function deleteFeat(id) {
     );
 
     return;
-
   }
 
   await loadFeats();
@@ -1630,7 +1299,140 @@ async function deleteFeat(id) {
 
 
 /* =========================
-   ESCAPE HTML
+   MOVE RANK
+========================= */
+
+async function moveFeat(id, direction) {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+    return;
+  }
+
+  /*
+   * Get the current ordering.
+   */
+
+  const ordered =
+    [...feats].sort(
+      (a, b) =>
+        (a.placement ?? 999999) -
+        (b.placement ?? 999999)
+    );
+
+  const index =
+    ordered.findIndex(
+      f => String(f.id) === String(id)
+    );
+
+  if (index === -1) {
+    return;
+  }
+
+  const current =
+    ordered[index];
+
+  /*
+   * Only swap with another feat
+   * of the SAME difficulty.
+   */
+
+  let targetIndex =
+    direction === "up"
+      ? index - 1
+      : index + 1;
+
+  while (
+    targetIndex >= 0 &&
+    targetIndex < ordered.length &&
+    ordered[targetIndex].difficulty !==
+      current.difficulty
+  ) {
+
+    targetIndex +=
+      direction === "up"
+        ? -1
+        : 1;
+
+  }
+
+  if (
+    targetIndex < 0 ||
+    targetIndex >= ordered.length
+  ) {
+    return;
+  }
+
+  const target =
+    ordered[targetIndex];
+
+  const currentPlacement =
+    current.placement ?? 999999;
+
+  const targetPlacement =
+    target.placement ?? 999999;
+
+  /*
+   * Swap their placement numbers.
+   */
+
+  const {
+    error: error1
+  } =
+    await supabaseClient
+      .from("feats")
+      .update({
+        placement:
+          targetPlacement
+      })
+      .eq(
+        "id",
+        current.id
+      );
+
+  if (error1) {
+
+    alert(
+      "Failed to move feat:\n\n" +
+      error1.message
+    );
+
+    return;
+  }
+
+  const {
+    error: error2
+  } =
+    await supabaseClient
+      .from("feats")
+      .update({
+        placement:
+          currentPlacement
+      })
+      .eq(
+        "id",
+        target.id
+      );
+
+  if (error2) {
+
+    alert(
+      "Failed to move feat:\n\n" +
+      error2.message
+    );
+
+    return;
+  }
+
+  await loadFeats();
+
+}
+
+
+/* =========================
+   HELPERS
 ========================= */
 
 function escapeHTML(text) {
@@ -1638,22 +1440,16 @@ function escapeHTML(text) {
   return String(text).replace(
     /[&<>"']/g,
     char => ({
-
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
       "'": "&#039;"
-
     })[char]
   );
 
 }
 
-
-/* =========================
-   SAFE URL
-========================= */
 
 function safeURL(value) {
 
@@ -1675,17 +1471,12 @@ function safeURL(value) {
 
     }
 
-  } catch (error) {
-  }
+  } catch {}
 
   return "";
 
 }
 
-
-/* =========================
-   YOUTUBE THUMBNAIL
-========================= */
 
 function getYouTubeThumbnail(value) {
 
@@ -1698,43 +1489,23 @@ function getYouTubeThumbnail(value) {
     const url =
       new URL(value);
 
-    let videoId =
-      "";
+    let videoId = "";
 
     if (
-      url.hostname.includes(
-        "youtube.com"
-      )
+      url.hostname.includes("youtube.com")
     ) {
 
       videoId =
-        url.searchParams.get("v") ||
-        "";
+        url.searchParams.get("v") || "";
 
       if (
         !videoId &&
-        url.pathname.startsWith(
-          "/shorts/"
-        )
+        url.pathname.startsWith("/shorts/")
       ) {
 
         videoId =
           url.pathname
             .split("/shorts/")[1]
-            .split("/")[0];
-
-      }
-
-      if (
-        !videoId &&
-        url.pathname.startsWith(
-          "/embed/"
-        )
-      ) {
-
-        videoId =
-          url.pathname
-            .split("/embed/")[1]
             .split("/")[0];
 
       }
@@ -1762,7 +1533,7 @@ function getYouTubeThumbnail(value) {
       "/hqdefault.jpg"
     );
 
-  } catch (error) {
+  } catch {
 
     return "";
 
@@ -1777,11 +1548,11 @@ function getYouTubeThumbnail(value) {
 
 const difficultyOrder = {
 
-  "Extreme": 1,
-  "Insane": 2,
-  "Hard": 3,
-  "Normal": 4,
-  "Easy": 5
+  Extreme: 1,
+  Insane: 2,
+  Hard: 3,
+  Normal: 4,
+  Easy: 5
 
 };
 
@@ -1804,12 +1575,84 @@ function render() {
       .value;
 
   /*
-   * FIRST:
-   * filter the feats
+   * The actual leaderboard is sorted
+   * by placement FIRST.
+   */
+
+  const ranked =
+    [...feats].sort(
+      (a, b) => {
+
+        const aPlacement =
+          a.placement ?? 999999;
+
+        const bPlacement =
+          b.placement ?? 999999;
+
+        return (
+          aPlacement -
+          bPlacement
+        );
+
+      }
+    );
+
+  /*
+   * Make sure difficulty categories
+   * remain in Extreme → Easy order.
+   */
+
+  ranked.sort(
+    (a, b) => {
+
+      const aDiff =
+        difficultyOrder[
+          a.difficulty
+        ] || 999;
+
+      const bDiff =
+        difficultyOrder[
+          b.difficulty
+        ] || 999;
+
+      if (
+        aDiff !== bDiff
+      ) {
+
+        return aDiff - bDiff;
+
+      }
+
+      return (
+        (a.placement ?? 999999) -
+        (b.placement ?? 999999)
+      );
+
+    }
+  );
+
+  /*
+   * Give every feat its displayed
+   * global rank based on the list.
+   */
+
+  ranked.forEach(
+    (feat, index) => {
+
+      feat.displayRank =
+        index + 1;
+
+    }
+  );
+
+  /*
+   * Search/filter AFTER ranking,
+   * so filtering doesn't change
+   * the displayed numbers.
    */
 
   const filtered =
-    feats.filter(
+    ranked.filter(
       feat => {
 
         const matchesSearch =
@@ -1837,77 +1680,14 @@ function render() {
       }
     );
 
-  /*
-   * SORT BY DIFFICULTY
-   *
-   * Extreme first
-   * Insane second
-   * Hard third
-   * etc.
-   */
-
-  filtered.sort(
-    (a, b) => {
-
-      const aOrder =
-        difficultyOrder[
-          a.difficulty
-        ] || 999;
-
-      const bOrder =
-        difficultyOrder[
-          b.difficulty
-        ] || 999;
-
-      if (
-        aOrder !== bOrder
-      ) {
-
-        return (
-          aOrder -
-          bOrder
-        );
-
-      }
-
-      /*
-       * Within the same
-       * difficulty, newest
-       * feats appear first.
-       */
-
-      return (
-        new Date(
-          b.created_at || 0
-        ) -
-        new Date(
-          a.created_at || 0
-        )
-      );
-
-    }
-  );
-
   const grid =
-    document.getElementById(
-      "grid"
-    );
+    document.getElementById("grid");
 
   if (!filtered.length) {
 
     grid.innerHTML = `
       <div class="empty">
-
         No feats yet.
-
-        <br><br>
-
-        ${
-          currentUser
-            ? 'Click <b>+ Add Feat</b> to add one.'
-            : 'Login to add a feat.'
-        }
-
       </div>
     `;
 
@@ -1915,34 +1695,11 @@ function render() {
 
   }
 
-  /*
-   * DISPLAY NUMBER
-   *
-   * This is the important
-   * Pointercrate-style part.
-   *
-   * #1 = hardest
-   * #2 = second hardest
-   * etc.
-   *
-   * There is NO maximum.
-   */
-
   let html = "";
-
-  let placement =
-    1;
-
-  let currentDifficulty =
-    null;
+  let currentDifficulty = null;
 
   filtered.forEach(
-    feat => {
-
-      /*
-       * Add centered category
-       * whenever difficulty changes.
-       */
+    (feat, filteredIndex) => {
 
       if (
         feat.difficulty !==
@@ -1978,11 +1735,6 @@ function render() {
           feat.proof_url
         );
 
-      /*
-       * Custom thumbnail first.
-       * YouTube thumbnail second.
-       */
-
       const thumbnail =
         safeURL(
           feat.thumbnail_url
@@ -2012,6 +1764,32 @@ function render() {
 
           `;
 
+      /*
+       * Determine whether this feat
+       * can move up/down within its tier.
+       */
+
+      const sameTier =
+        ranked.filter(
+          f =>
+            f.difficulty ===
+            feat.difficulty
+        );
+
+      const tierIndex =
+        sameTier.findIndex(
+          f =>
+            String(f.id) ===
+            String(feat.id)
+        );
+
+      const canMoveUp =
+        tierIndex > 0;
+
+      const canMoveDown =
+        tierIndex <
+        sameTier.length - 1;
+
       html += `
 
         <article class="card">
@@ -2021,7 +1799,7 @@ function render() {
             <div class="card-top">
 
               <div class="placement">
-                #${placement}
+                #${feat.displayRank}
               </div>
 
               <div class="feat-info">
@@ -2043,11 +1821,9 @@ function render() {
                     ? `
 
                       <div class="description">
-
                         ${escapeHTML(
                           feat.description
                         )}
-
                       </div>
 
                     `
@@ -2061,11 +1837,9 @@ function render() {
             <div class="meta">
 
               <span class="pill">
-
                 ${escapeHTML(
                   feat.difficulty || ""
                 )}
-
               </span>
 
               ${
@@ -2073,11 +1847,9 @@ function render() {
                   ? `
 
                     <span class="pill">
-
                       ${escapeHTML(
                         feat.date
                       )}
-
                     </span>
 
                   `
@@ -2090,9 +1862,7 @@ function render() {
 
                     <a
                       class="proof"
-                      href="${escapeHTML(
-                        proofURL
-                      )}"
+                      href="${escapeHTML(proofURL)}"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -2115,6 +1885,40 @@ function render() {
                 ? `
 
                   <div class="actions">
+
+                    <button
+                      class="move-button"
+                      type="button"
+                      title="Move up"
+                      ${
+                        canMoveUp
+                          ? ""
+                          : "disabled"
+                      }
+                      onclick="moveFeat(
+                        '${feat.id}',
+                        'up'
+                      )"
+                    >
+                      ↑
+                    </button>
+
+                    <button
+                      class="move-button"
+                      type="button"
+                      title="Move down"
+                      ${
+                        canMoveDown
+                          ? ""
+                          : "disabled"
+                      }
+                      onclick="moveFeat(
+                        '${feat.id}',
+                        'down'
+                      )"
+                    >
+                      ↓
+                    </button>
 
                     <button
                       type="button"
@@ -2144,8 +1948,6 @@ function render() {
 
       `;
 
-      placement++;
-
     }
   );
 
@@ -2156,7 +1958,7 @@ function render() {
 
 
 /* =========================
-   SEARCH / FILTER
+   SEARCH
 ========================= */
 
 document
@@ -2175,7 +1977,7 @@ document
 
 
 /* =========================
-   MODAL BACKDROPS
+   BACKDROPS
 ========================= */
 
 document
@@ -2185,12 +1987,9 @@ document
     event => {
 
       if (
-        event.target.id ===
-        "modal"
+        event.target.id === "modal"
       ) {
-
         closeModal();
-
       }
 
     }
@@ -2204,12 +2003,9 @@ document
     event => {
 
       if (
-        event.target.id ===
-        "authModal"
+        event.target.id === "authModal"
       ) {
-
         closeAuthModal();
-
       }
 
     }
