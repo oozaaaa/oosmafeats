@@ -97,6 +97,7 @@ button:disabled {
   gap: 16px;
 }
 
+
 /* =========================
    FEAT CARD
 ========================= */
@@ -111,7 +112,6 @@ button:disabled {
   min-height: 250px;
 }
 
-/* YouTube thumbnail */
 .card::before {
   content: "";
   position: absolute;
@@ -123,7 +123,6 @@ button:disabled {
   z-index: 0;
 }
 
-/* Dark overlay */
 .card::after {
   content: "";
   position: absolute;
@@ -132,7 +131,6 @@ button:disabled {
   z-index: 1;
 }
 
-/* Keep card content above thumbnail */
 .card > * {
   position: relative;
   z-index: 2;
@@ -167,6 +165,7 @@ button:disabled {
 .actions {
   display: flex;
   gap: 7px;
+  flex-wrap: wrap;
 }
 
 .actions button {
@@ -188,6 +187,45 @@ button:disabled {
   grid-column: 1 / -1;
 }
 
+
+/* =========================
+   IMAGE UPLOAD
+========================= */
+
+.image-upload {
+  display: grid;
+  gap: 8px;
+}
+
+.image-upload input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.image-preview {
+  display: none;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #303039;
+}
+
+.image-preview.show {
+  display: block;
+}
+
+.image-help {
+  color: #777;
+  font-size: 11px;
+}
+
+
+/* =========================
+   MODALS
+========================= */
+
 .modal {
   display: none;
   position: fixed;
@@ -205,6 +243,8 @@ button:disabled {
 
 .modal-box {
   width: min(520px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
   background: #111116;
   border: 1px solid #292931;
   border-radius: 16px;
@@ -249,6 +289,7 @@ textarea {
 }
 
 @media(max-width: 600px) {
+
   .row {
     grid-template-columns: 1fr;
   }
@@ -256,6 +297,7 @@ textarea {
   header {
     flex-direction: column;
   }
+
 }
 </style>
 </head>
@@ -270,7 +312,10 @@ textarea {
   </div>
 
   <div class="header-actions">
-    <span id="authStatus">Not logged in</span>
+
+    <span id="authStatus">
+      Not logged in
+    </span>
 
     <button
       id="authButton"
@@ -279,9 +324,11 @@ textarea {
     >
       Login
     </button>
+
   </div>
 
 </header>
+
 
 <main>
 
@@ -294,12 +341,17 @@ textarea {
     >
 
     <select id="filter">
-      <option value="">All difficulties</option>
+
+      <option value="">
+        All difficulties
+      </option>
+
       <option>Easy</option>
       <option>Normal</option>
       <option>Hard</option>
       <option>Insane</option>
       <option>Extreme</option>
+
     </select>
 
     <button
@@ -313,52 +365,74 @@ textarea {
 
   </div>
 
+
   <div id="grid" class="grid"></div>
 
 </main>
 
 
-<!-- FEAT MODAL -->
+<!-- =========================
+     FEAT MODAL
+========================= -->
 
 <div id="modal" class="modal">
 
   <div class="modal-box">
 
-    <h2 id="modalTitle">Add Feat</h2>
+    <h2 id="modalTitle">
+      Add Feat
+    </h2>
+
 
     <form id="featForm">
 
-      <input type="hidden" id="editId">
+      <input
+        type="hidden"
+        id="editId"
+      >
+
 
       <div class="row">
 
         <div>
-          <label>FEAT NAME</label>
+
+          <label>
+            FEAT NAME
+          </label>
 
           <input
             id="name"
             required
             placeholder="Example: Dark Souls II SL1"
           >
+
         </div>
 
+
         <div>
-          <label>GAME</label>
+
+          <label>
+            GAME
+          </label>
 
           <input
             id="game"
             required
             placeholder="Example: Dark Souls II"
           >
+
         </div>
 
       </div>
+
 
       <div class="row">
 
         <div>
 
-          <label>DIFFICULTY</label>
+          <label>
+            DIFFICULTY
+          </label>
 
           <select id="difficulty">
 
@@ -372,9 +446,12 @@ textarea {
 
         </div>
 
+
         <div>
 
-          <label>DATE COMPLETED</label>
+          <label>
+            DATE COMPLETED
+          </label>
 
           <input
             id="date"
@@ -385,9 +462,12 @@ textarea {
 
       </div>
 
+
       <div>
 
-        <label>DESCRIPTION</label>
+        <label>
+          DESCRIPTION
+        </label>
 
         <textarea
           id="description"
@@ -396,9 +476,12 @@ textarea {
 
       </div>
 
+
       <div>
 
-        <label>PROOF URL</label>
+        <label>
+          PROOF URL
+        </label>
 
         <input
           id="proof"
@@ -407,6 +490,35 @@ textarea {
         >
 
       </div>
+
+
+      <!-- IMAGE UPLOAD -->
+
+      <div class="image-upload">
+
+        <label>
+          CUSTOM THUMBNAIL
+        </label>
+
+        <input
+          id="thumbnailFile"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+        >
+
+        <div class="image-help">
+          Upload an image to use as the feat card background.
+          If you upload one, it will override the YouTube thumbnail.
+        </div>
+
+        <img
+          id="imagePreview"
+          class="image-preview"
+          alt="Thumbnail preview"
+        >
+
+      </div>
+
 
       <div class="form-buttons">
 
@@ -420,6 +532,7 @@ textarea {
         <button
           class="add"
           type="submit"
+          id="saveButton"
         >
           Save Feat
         </button>
@@ -433,19 +546,26 @@ textarea {
 </div>
 
 
-<!-- LOGIN MODAL -->
+<!-- =========================
+     LOGIN MODAL
+========================= -->
 
 <div id="authModal" class="modal">
 
   <div class="modal-box">
 
-    <h2>Login</h2>
+    <h2>
+      Login
+    </h2>
+
 
     <form id="authForm">
 
       <div>
 
-        <label>EMAIL</label>
+        <label>
+          EMAIL
+        </label>
 
         <input
           id="authEmail"
@@ -456,9 +576,12 @@ textarea {
 
       </div>
 
+
       <div>
 
-        <label>PASSWORD</label>
+        <label>
+          PASSWORD
+        </label>
 
         <input
           id="authPassword"
@@ -469,10 +592,12 @@ textarea {
 
       </div>
 
+
       <div
         id="authError"
         class="error"
       ></div>
+
 
       <div class="form-buttons">
 
@@ -501,7 +626,12 @@ textarea {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
   "https://qptsfclqcoqmlsegkbpt.supabase.co";
@@ -513,10 +643,6 @@ const OWNER_ID =
   "d308964b-015f-48f1-a9b2-196c6812f654";
 
 
-/*
-  Supabase client
-*/
-
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
@@ -524,9 +650,15 @@ const supabaseClient =
   );
 
 
+const IMAGE_BUCKET =
+  "feat-images";
+
+
 let feats = [];
 
 let currentUser = null;
+
+let selectedThumbnailFile = null;
 
 
 /* =========================
@@ -579,23 +711,31 @@ function updateAuthUI() {
     currentUser.id === OWNER_ID
   ) {
 
-    status.textContent = "Logged in";
+    status.textContent =
+      "Logged in";
 
-    button.textContent = "Logout";
+    button.textContent =
+      "Logout";
 
-    button.onclick = logout;
+    button.onclick =
+      logout;
 
-    addButton.disabled = false;
+    addButton.disabled =
+      false;
 
   } else {
 
-    status.textContent = "Not logged in";
+    status.textContent =
+      "Not logged in";
 
-    button.textContent = "Login";
+    button.textContent =
+      "Login";
 
-    button.onclick = openAuthModal;
+    button.onclick =
+      openAuthModal;
 
-    addButton.disabled = true;
+    addButton.disabled =
+      true;
 
   }
 
@@ -623,7 +763,8 @@ function closeAuthModal() {
 
   document
     .getElementById("authError")
-    .style.display = "none";
+    .style.display =
+      "none";
 
 }
 
@@ -667,7 +808,8 @@ document
       const errorBox =
         document.getElementById("authError");
 
-      errorBox.style.display = "none";
+      errorBox.style.display =
+        "none";
 
 
       const {
@@ -757,7 +899,8 @@ async function loadFeats() {
   }
 
 
-  feats = data || [];
+  feats =
+    data || [];
 
   render();
 
@@ -765,7 +908,7 @@ async function loadFeats() {
 
 
 /* =========================
-   ADD / EDIT MODAL
+   ADD / EDIT
 ========================= */
 
 function handleAddClick() {
@@ -779,7 +922,9 @@ function handleAddClick() {
   }
 
 
-  if (currentUser.id !== OWNER_ID) {
+  if (
+    currentUser.id !== OWNER_ID
+  ) {
 
     alert(
       "You are not authorized."
@@ -828,6 +973,24 @@ function openModal(id = null) {
     id !== null
       ? "Edit Feat"
       : "Add Feat";
+
+
+  selectedThumbnailFile =
+    null;
+
+
+  document
+    .getElementById("thumbnailFile")
+    .value =
+    "";
+
+
+  const preview =
+    document.getElementById("imagePreview");
+
+  preview.src = "";
+
+  preview.classList.remove("show");
 
 
   if (id !== null) {
@@ -884,6 +1047,17 @@ function openModal(id = null) {
       feat.proof_url || "";
 
 
+    if (feat.thumbnail_url) {
+
+      preview.src =
+        feat.thumbnail_url;
+
+      preview.classList.add(
+        "show"
+      );
+
+    }
+
   } else {
 
     document
@@ -905,6 +1079,168 @@ function closeModal() {
   document
     .getElementById("modal")
     .classList.remove("open");
+
+}
+
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+document
+  .getElementById("thumbnailFile")
+  .addEventListener(
+    "change",
+    event => {
+
+      const file =
+        event.target.files[0];
+
+      if (!file) {
+
+        selectedThumbnailFile =
+          null;
+
+        return;
+
+      }
+
+
+      if (
+        !file.type.startsWith("image/")
+      ) {
+
+        alert(
+          "Please select an image file."
+        );
+
+        event.target.value =
+          "";
+
+        return;
+
+      }
+
+
+      if (
+        file.size > 10 * 1024 * 1024
+      ) {
+
+        alert(
+          "Image must be smaller than 10 MB."
+        );
+
+        event.target.value =
+          "";
+
+        return;
+
+      }
+
+
+      selectedThumbnailFile =
+        file;
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        e => {
+
+          const preview =
+            document.getElementById(
+              "imagePreview"
+            );
+
+          preview.src =
+            e.target.result;
+
+          preview.classList.add(
+            "show"
+          );
+
+        };
+
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+
+/* =========================
+   UPLOAD IMAGE
+========================= */
+
+async function uploadThumbnail(
+  file,
+  featId
+) {
+
+  if (!file) {
+    return null;
+  }
+
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase();
+
+
+  const filePath =
+    OWNER_ID +
+    "/" +
+    featId +
+    "-" +
+    Date.now() +
+    "." +
+    extension;
+
+
+  const {
+    error: uploadError
+  } =
+    await supabaseClient
+      .storage
+      .from(IMAGE_BUCKET)
+      .upload(
+        filePath,
+        file,
+        {
+          upsert: true,
+          contentType: file.type
+        }
+      );
+
+
+  if (uploadError) {
+
+    console.error(
+      "Image upload failed:",
+      uploadError
+    );
+
+    throw uploadError;
+
+  }
+
+
+  const {
+    data
+  } =
+    supabaseClient
+      .storage
+      .from(IMAGE_BUCKET)
+      .getPublicUrl(
+        filePath
+      );
+
+
+  return data.publicUrl;
 
 }
 
@@ -936,77 +1272,175 @@ document
       }
 
 
-      const id =
-        document
-          .getElementById("editId")
-          .value;
+      const saveButton =
+        document.getElementById(
+          "saveButton"
+        );
 
 
-      const featData = {
+      saveButton.disabled =
+        true;
 
-        name:
+      saveButton.textContent =
+        "Saving...";
+
+
+      try {
+
+        const id =
           document
-            .getElementById("name")
-            .value
-            .trim(),
-
-        game:
-          document
-            .getElementById("game")
-            .value
-            .trim(),
-
-        difficulty:
-          document
-            .getElementById("difficulty")
-            .value,
-
-        date:
-          document
-            .getElementById("date")
-            .value || null,
-
-        description:
-          document
-            .getElementById("description")
-            .value
-            .trim(),
-
-        proof_url:
-          document
-            .getElementById("proof")
-            .value
-            .trim() || null
-
-      };
+            .getElementById("editId")
+            .value;
 
 
-      let error;
+        const featData = {
+
+          name:
+            document
+              .getElementById("name")
+              .value
+              .trim(),
+
+          game:
+            document
+              .getElementById("game")
+              .value
+              .trim(),
+
+          difficulty:
+            document
+              .getElementById("difficulty")
+              .value,
+
+          date:
+            document
+              .getElementById("date")
+              .value ||
+              null,
+
+          description:
+            document
+              .getElementById("description")
+              .value
+              .trim(),
+
+          proof_url:
+            document
+              .getElementById("proof")
+              .value
+              .trim() ||
+              null
+
+        };
 
 
-      if (id) {
-
-        ({
-          error
-        } =
-          await supabaseClient
-            .from("feats")
-            .update(featData)
-            .eq("id", id));
-
-      } else {
-
-        ({
-          error
-        } =
-          await supabaseClient
-            .from("feats")
-            .insert(featData));
-
-      }
+        let savedFeatId =
+          id;
 
 
-      if (error) {
+        /*
+          ADD
+        */
+
+        if (!id) {
+
+          const {
+            data,
+            error
+          } =
+            await supabaseClient
+              .from("feats")
+              .insert(
+                featData
+              )
+              .select()
+              .single();
+
+
+          if (error) {
+            throw error;
+          }
+
+
+          savedFeatId =
+            data.id;
+
+        }
+
+
+        /*
+          EDIT
+        */
+
+        else {
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .from("feats")
+              .update(
+                featData
+              )
+              .eq(
+                "id",
+                id
+              );
+
+
+          if (error) {
+            throw error;
+          }
+
+        }
+
+
+        /*
+          Upload custom thumbnail
+        */
+
+        if (
+          selectedThumbnailFile
+        ) {
+
+          const thumbnailURL =
+            await uploadThumbnail(
+              selectedThumbnailFile,
+              savedFeatId
+            );
+
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .from("feats")
+              .update({
+                thumbnail_url:
+                  thumbnailURL
+              })
+              .eq(
+                "id",
+                savedFeatId
+              );
+
+
+          if (error) {
+            throw error;
+          }
+
+        }
+
+
+        closeModal();
+
+        selectedThumbnailFile =
+          null;
+
+        await loadFeats();
+
+
+      } catch (error) {
 
         console.error(
           "Failed to save feat:",
@@ -1018,21 +1452,23 @@ document
           error.message
         );
 
-        return;
+
+      } finally {
+
+        saveButton.disabled =
+          false;
+
+        saveButton.textContent =
+          "Save Feat";
 
       }
-
-
-      closeModal();
-
-      await loadFeats();
 
     }
   );
 
 
 /* =========================
-   DELETE FEAT
+   DELETE
 ========================= */
 
 async function deleteFeat(id) {
@@ -1068,7 +1504,10 @@ async function deleteFeat(id) {
     await supabaseClient
       .from("feats")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
@@ -1125,10 +1564,12 @@ function safeURL(value) {
     return "";
   }
 
+
   try {
 
     const url =
       new URL(value);
+
 
     if (
       url.protocol === "http:" ||
@@ -1142,6 +1583,7 @@ function safeURL(value) {
   } catch (error) {
 
   }
+
 
   return "";
 
@@ -1158,33 +1600,33 @@ function getYouTubeThumbnail(value) {
     return "";
   }
 
+
   try {
 
     const url =
       new URL(value);
 
-    let videoId = "";
 
+    let videoId =
+      "";
 
-    /*
-      youtube.com/watch?v=VIDEO_ID
-    */
 
     if (
-      url.hostname.includes("youtube.com")
+      url.hostname.includes(
+        "youtube.com"
+      )
     ) {
 
       videoId =
-        url.searchParams.get("v") || "";
+        url.searchParams.get("v") ||
+        "";
 
-
-      /*
-        youtube.com/shorts/VIDEO_ID
-      */
 
       if (
         !videoId &&
-        url.pathname.startsWith("/shorts/")
+        url.pathname.startsWith(
+          "/shorts/"
+        )
       ) {
 
         videoId =
@@ -1195,13 +1637,11 @@ function getYouTubeThumbnail(value) {
       }
 
 
-      /*
-        youtube.com/embed/VIDEO_ID
-      */
-
       if (
         !videoId &&
-        url.pathname.startsWith("/embed/")
+        url.pathname.startsWith(
+          "/embed/"
+        )
       ) {
 
         videoId =
@@ -1213,10 +1653,6 @@ function getYouTubeThumbnail(value) {
 
     }
 
-
-    /*
-      youtu.be/VIDEO_ID
-    */
 
     if (
       url.hostname === "youtu.be"
@@ -1235,15 +1671,13 @@ function getYouTubeThumbnail(value) {
     }
 
 
-    /*
-      Max-resolution YouTube thumbnail
-    */
-
-   return (
-  "https://img.youtube.com/vi/" +
-  encodeURIComponent(videoId) +
-  "/hqdefault.jpg"
-);
+    return (
+      "https://img.youtube.com/vi/" +
+      encodeURIComponent(
+        videoId
+      ) +
+      "/hqdefault.jpg"
+    );
 
   } catch (error) {
 
@@ -1274,48 +1708,58 @@ function render() {
 
 
   const filtered =
-    feats.filter(feat => {
+    feats.filter(
+      feat => {
 
-      const matchesSearch =
-        !query ||
-        (
-          (feat.name || "") +
-          " " +
-          (feat.game || "") +
-          " " +
-          (feat.description || "")
-        )
-        .toLowerCase()
-        .includes(query);
-
-
-      const matchesDifficulty =
-        !difficulty ||
-        feat.difficulty === difficulty;
+        const matchesSearch =
+          !query ||
+          (
+            (feat.name || "") +
+            " " +
+            (feat.game || "") +
+            " " +
+            (feat.description || "")
+          )
+          .toLowerCase()
+          .includes(query);
 
 
-      return (
-        matchesSearch &&
-        matchesDifficulty
-      );
+        const matchesDifficulty =
+          !difficulty ||
+          feat.difficulty ===
+            difficulty;
 
-    });
+
+        return (
+          matchesSearch &&
+          matchesDifficulty
+        );
+
+      }
+    );
 
 
   const grid =
-    document.getElementById("grid");
+    document.getElementById(
+      "grid"
+    );
 
 
   if (!filtered.length) {
 
     grid.innerHTML = `
       <div class="empty">
-        No feats yet.<br><br>
+
+        No feats yet.
+
+        <br><br>
+
         ${
           currentUser
             ? 'Click <b>+ Add Feat</b> to add one.'
             : 'Login to add a feat.'
         }
+
       </div>
     `;
 
@@ -1326,131 +1770,145 @@ function render() {
 
   grid.innerHTML =
     filtered
-      .map(feat => {
+      .map(
+        feat => {
 
-        const proofURL =
-          safeURL(feat.proof_url);
-
-
-        const thumbnail =
-          getYouTubeThumbnail(
-            feat.proof_url
-          );
+          const proofURL =
+            safeURL(
+              feat.proof_url
+            );
 
 
-        /*
-          Put the thumbnail into the CSS
-          variable used by .card::before.
-        */
+          /*
+            CUSTOM IMAGE FIRST
+            YOUTUBE SECOND
+          */
 
-        const thumbnailStyle =
-          thumbnail
-            ? `--thumbnail: url("${thumbnail}");`
-            : `--thumbnail: none;`;
+          const thumbnail =
+            feat.thumbnail_url ||
+            getYouTubeThumbnail(
+              feat.proof_url
+            );
 
 
-        return `
+          const thumbnailStyle =
+            thumbnail
+              ? `--thumbnail: url("${escapeHTML(thumbnail)}");`
+              : `--thumbnail: none;`;
 
-          <article
-            class="card"
-            style="${thumbnailStyle}"
-          >
 
-            <div class="game">
-              ${escapeHTML(
-                feat.game || ""
-              )}
-            </div>
+          return `
 
-            <div class="name">
-              ${escapeHTML(
-                feat.name || ""
-              )}
-            </div>
+            <article
+              class="card"
+              style="${thumbnailStyle}"
+            >
 
-            <div>
-
-              <span class="pill">
+              <div class="game">
                 ${escapeHTML(
-                  feat.difficulty || ""
+                  feat.game || ""
                 )}
-              </span>
+              </div>
 
-              ${
-                feat.date
-                ? `
-                  <span class="pill">
-                    ${escapeHTML(
-                      feat.date
-                    )}
-                  </span>
-                `
-                : ""
-              }
 
-            </div>
+              <div class="name">
+                ${escapeHTML(
+                  feat.name || ""
+                )}
+              </div>
 
-            ${
-              feat.description
-              ? `
-                <div class="description">
+
+              <div>
+
+                <span class="pill">
                   ${escapeHTML(
-                    feat.description
+                    feat.difficulty || ""
                   )}
-                </div>
-              `
-              : ""
-            }
+                </span>
 
-            <div class="actions">
+
+                ${
+                  feat.date
+                  ? `
+                    <span class="pill">
+                      ${escapeHTML(
+                        feat.date
+                      )}
+                    </span>
+                  `
+                  : ""
+                }
+
+              </div>
+
 
               ${
-                proofURL
+                feat.description
                 ? `
-                  <a
-                    class="proof"
-                    href="${escapeHTML(
-                      proofURL
-                    )}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button type="button">
-                      Proof ↗
+                  <div class="description">
+                    ${escapeHTML(
+                      feat.description
+                    )}
+                  </div>
+                `
+                : ""
+              }
+
+
+              <div class="actions">
+
+                ${
+                  proofURL
+                  ? `
+                    <a
+                      class="proof"
+                      href="${escapeHTML(
+                        proofURL
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+
+                      <button type="button">
+                        Proof ↗
+                      </button>
+
+                    </a>
+                  `
+                  : ""
+                }
+
+
+                ${
+                  currentUser &&
+                  currentUser.id === OWNER_ID
+                  ? `
+                    <button
+                      type="button"
+                      onclick="openModal('${feat.id}')"
+                    >
+                      Edit
                     </button>
-                  </a>
-                `
-                : ""
-              }
 
-              ${
-                currentUser &&
-                currentUser.id === OWNER_ID
-                ? `
-                  <button
-                    type="button"
-                    onclick="openModal('${feat.id}')"
-                  >
-                    Edit
-                  </button>
 
-                  <button
-                    type="button"
-                    onclick="deleteFeat('${feat.id}')"
-                  >
-                    Delete
-                  </button>
-                `
-                : ""
-              }
+                    <button
+                      type="button"
+                      onclick="deleteFeat('${feat.id}')"
+                    >
+                      Delete
+                    </button>
+                  `
+                  : ""
+                }
 
-            </div>
+              </div>
 
-          </article>
+            </article>
 
-        `;
+          `;
 
-      })
+        }
+      )
       .join("");
 
 }
@@ -1487,7 +1945,8 @@ document
     event => {
 
       if (
-        event.target.id === "modal"
+        event.target.id ===
+        "modal"
       ) {
 
         closeModal();
@@ -1505,7 +1964,8 @@ document
     event => {
 
       if (
-        event.target.id === "authModal"
+        event.target.id ===
+        "authModal"
       ) {
 
         closeAuthModal();
