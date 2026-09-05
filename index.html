@@ -1,2091 +1,888 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OOSMAFEATS</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #0b0b0f;
-  color: #eee;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  padding: 45px 7% 30px;
-  border-bottom: 1px solid #25252c;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.logo {
-  font-size: 36px;
-  font-weight: bold;
-}
-
-.subtitle {
-  color: #888;
-  margin-top: 6px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-#authStatus {
-  color: #888;
-  font-size: 13px;
-}
-
-main {
-  width: min(1200px, 90%);
-  margin: 35px auto 70px;
-}
-
-.toolbar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-}
-
-input,
-select,
-textarea,
-button {
-  font: inherit;
-  border: 1px solid #303039;
-  background: #15151b;
-  color: white;
-  border-radius: 9px;
-  padding: 11px 13px;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #555562;
-}
-
-.search {
-  flex: 1;
-  min-width: 220px;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #555562;
-}
-
-button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
-.add {
-  background: white;
-  color: black;
-  font-weight: bold;
-}
-
-/* =========================
-   DIFFICULTY SECTIONS
-========================= */
-
-.grid {
-  display: flex;
-  flex-direction: column;
-}
-
-.tier {
-  margin: 48px 0 18px;
-}
-
-.tier:first-child {
-  margin-top: 0;
-}
-
-.tier-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  color: #aaa;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
-
-.tier-title::before,
-.tier-title::after {
-  content: "";
-  height: 1px;
-  background: #292931;
-  flex: 1;
-}
-
-/* =========================
-   FEAT CARD
-========================= */
-
-.card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  min-height: 245px;
-  margin-bottom: 14px;
-  background: #121217;
-  border: 1px solid #292931;
-  border-radius: 14px;
-  overflow: hidden;
-  transition: border-color .15s, transform .15s;
-}
-
-.card:hover {
-  border-color: #45454f;
-  transform: translateY(-1px);
-}
-
-.card-content {
-  padding: 27px 30px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-top {
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-}
-
-.placement {
-  flex-shrink: 0;
-  min-width: 55px;
-  padding-top: 3px;
-  color: #777;
-  font-size: 27px;
-  font-weight: bold;
-  text-align: right;
-}
-
-.feat-info {
-  min-width: 0;
-}
-
-.game {
-  color: #888;
-  font-size: 13px;
-  margin-bottom: 7px;
-}
-
-.name {
-  font-size: 30px;
-  font-weight: bold;
-  line-height: 1.15;
-  color: #fff;
-  margin-bottom: 14px;
-}
-
-.description {
-  color: #ccc;
-  line-height: 1.55;
-  font-size: 15px;
-  margin: 0 0 20px;
-}
-
-.meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: auto;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  background: #1b1b22;
-  border: 1px solid #303039;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-size: 12px;
-  color: #ccc;
-}
-
-.proof {
-  text-decoration: none;
-}
-
-.actions {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.actions button {
-  font-size: 12px;
-  padding: 7px 10px;
-}
-
-/* RANK MOVEMENT BUTTONS */
-
-.move-button {
-  min-width: 34px;
-  padding: 6px 9px !important;
-  font-size: 15px !important;
-  line-height: 1;
-}
-
-.move-button:hover {
-  background: #22222a;
-}
-
-/* =========================
-   THUMBNAIL
-========================= */
-
-.thumbnail {
-  position: relative;
-  min-height: 245px;
-  overflow: hidden;
-  background: #09090c;
-  border-left: 1px solid #292931;
-}
-
-.thumbnail img {
-  width: 100%;
-  height: 100%;
-  min-height: 245px;
-  display: block;
-  object-fit: cover;
-}
-
-/* =========================
-   EMPTY
-========================= */
-
-.empty {
-  text-align: center;
-  color: #777;
-  padding: 70px 10px;
-  border: 1px dashed #292931;
-  border-radius: 14px;
-}
-
-/* =========================
-   MODALS
-========================= */
-
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #000b;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 100;
-}
-
-.modal.open {
-  display: flex;
-}
-
-.modal-box {
-  width: min(520px, 100%);
-  max-height: 90vh;
-  overflow-y: auto;
-  background: #111116;
-  border: 1px solid #292931;
-  border-radius: 16px;
-  padding: 25px;
-}
-
-.modal-box h2 {
-  margin-top: 0;
-}
-
-form {
-  display: grid;
-  gap: 12px;
-}
-
-label {
-  color: #999;
-  font-size: 12px;
-}
-
-textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.error {
-  color: #ff7777;
-  font-size: 13px;
-  display: none;
-}
-
-.image-preview {
-  display: none;
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #303039;
-}
-
-.image-preview.show {
-  display: block;
-}
-
-.image-help {
-  color: #777;
-  font-size: 11px;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width: 750px) {
-  .card {
-    grid-template-columns: 1fr;
-  }
-
-  .thumbnail {
-    order: -1;
-    height: 210px;
-    min-height: 210px;
-    border-left: none;
-    border-bottom: 1px solid #292931;
-  }
-
-  .thumbnail img {
-    min-height: 210px;
-  }
-
-  .card-content {
-    padding: 22px;
-  }
-
-  .name {
-    font-size: 25px;
-  }
-}
-
-@media(max-width: 600px) {
-  .row {
-    grid-template-columns: 1fr;
-  }
-
-  header {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  main {
-    width: 92%;
-  }
-
-  .placement {
-    min-width: 40px;
-    font-size: 22px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OOSMAFEATS</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      width: min(1200px, 94%);
+      margin: 0 auto;
+      padding: 40px 0 80px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 48px;
+      letter-spacing: -2px;
+    }
+
+    .subtitle {
+      color: #888;
+      margin-top: 5px;
+      margin-bottom: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+    }
+
+    input,
+    select,
+    textarea {
+      background: #181818;
+      border: 1px solid #333;
+      color: white;
+      border-radius: 8px;
+      padding: 11px 13px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #666;
+    }
+
+    #search {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: .85;
+    }
+
+    .secondary {
+      background: #222;
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .danger {
+      background: #5b1717;
+      color: #fff;
+    }
+
+    .auth {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #userStatus {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .tier-title {
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 5px;
+      font-weight: bold;
+      margin: 45px 0 18px;
+      color: #aaa;
+    }
+
+    .feat {
+      position: relative;
+      display: grid;
+      grid-template-columns: 70px 1fr 240px;
+      gap: 20px;
+      min-height: 190px;
+      background: #151515;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .placement {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 25px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #777;
+    }
+
+    .feat-content {
+      padding: 22px 0;
+      min-width: 0;
+    }
+
+    .feat-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .game {
+      color: #aaa;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .description {
+      color: #ccc;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      margin-bottom: 15px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .tag {
+      background: #242424;
+      border: 1px solid #333;
+      color: #ccc;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .move-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .move-buttons button {
+      min-width: 35px;
+      padding: 7px 8px;
+    }
+
+    .thumbnail {
+      min-height: 190px;
+      background-color: #101010;
+      background-image: var(--thumbnail);
+      background-size: cover;
+      background-position: center;
+      border-left: 1px solid #292929;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(600px, 100%);
+      background: #151515;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 25px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-box h2 {
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .proof-link {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .empty {
+      color: #666;
+      text-align: center;
+      padding: 50px 0;
+    }
+
+    @media (max-width: 800px) {
+      .feat {
+        grid-template-columns: 55px 1fr;
+      }
+
+      .thumbnail {
+        grid-column: 2;
+        min-height: 180px;
+        border-left: 0;
+        border-top: 1px solid #292929;
+      }
+
+      .feat-content {
+        padding-right: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
+<div class="container">
 
-  <div>
-    <div class="logo">OOSMAFEATS</div>
-    <div class="subtitle">All my feats.</div>
-  </div>
+  <h1>OOSMAFEATS</h1>
+  <div class="subtitle">All my feats.</div>
 
-  <div class="header-actions">
-    <span id="authStatus">Not logged in</span>
-    <button id="authButton" type="button" onclick="openAuthModal()">
-      Login
-    </button>
-  </div>
-
-</header>
-
-<main>
-
-  <div class="toolbar">
+  <div class="topbar">
 
     <input
       id="search"
-      class="search"
-      placeholder="Search feats or games..."
+      type="text"
+      placeholder="Search feats..."
     >
 
-    <select id="filter">
-      <option value="">All difficulties</option>
-      <option>Easy</option>
-      <option>Normal</option>
-      <option>Hard</option>
-      <option>Insane</option>
-      <option>Extreme</option>
+    <select id="difficultyFilter">
+      <option value="all">All Difficulties</option>
+      <option value="Extreme">Extreme</option>
+      <option value="Insane">Insane</option>
+      <option value="Hard">Hard</option>
+      <option value="Normal">Normal</option>
+      <option value="Easy">Easy</option>
     </select>
 
-    <button
-      id="addButton"
-      class="add"
-      type="button"
-      onclick="handleAddClick()"
-    >
+    <button id="addButton" onclick="openAddModal()" style="display:none;">
       + Add Feat
     </button>
 
-  </div>
+    <div class="auth">
+      <button id="loginButton" class="secondary" onclick="openLoginModal()">
+        Login
+      </button>
 
-  <div id="grid" class="grid"></div>
+      <button id="logoutButton" class="secondary" onclick="logout()" style="display:none;">
+        Logout
+      </button>
 
-</main>
-
-
-<!-- =========================
-     FEAT MODAL
-========================= -->
-
-<div id="modal" class="modal">
-
-  <div class="modal-box">
-
-    <h2 id="modalTitle">Add Feat</h2>
-
-    <form id="featForm">
-
-      <input type="hidden" id="editId">
-
-      <div class="row">
-
-        <div>
-          <label>FEAT NAME</label>
-          <input id="name" required>
-        </div>
-
-        <div>
-          <label>GAME</label>
-          <input id="game" required>
-        </div>
-
-      </div>
-
-      <div>
-        <label>DIFFICULTY</label>
-
-        <select id="difficulty">
-          <option>Easy</option>
-          <option>Normal</option>
-          <option>Hard</option>
-          <option>Insane</option>
-          <option>Extreme</option>
-        </select>
-      </div>
-
-      <div>
-        <label>DATE COMPLETED</label>
-        <input id="date" type="date">
-      </div>
-
-      <div>
-        <label>DESCRIPTION</label>
-        <textarea id="description"></textarea>
-      </div>
-
-      <div>
-        <label>PROOF URL</label>
-        <input
-          id="proof"
-          type="url"
-          placeholder="https://youtube.com/..."
-        >
-      </div>
-
-      <div class="image-upload">
-
-        <label>CUSTOM THUMBNAIL</label>
-
-        <input
-          id="thumbnailFile"
-          type="file"
-          accept="image/png,image/jpeg,image/webp,image/gif"
-        >
-
-        <div class="image-help">
-          Upload an image to use on the right side of the feat.
-        </div>
-
-        <img
-          id="imagePreview"
-          class="image-preview"
-          alt=""
-        >
-
-      </div>
-
-      <div class="form-buttons">
-
-        <button type="button" onclick="closeModal()">
-          Cancel
-        </button>
-
-        <button class="add" type="submit" id="saveButton">
-          Save Feat
-        </button>
-
-      </div>
-
-    </form>
+      <span id="userStatus"></span>
+    </div>
 
   </div>
+
+  <div id="featList"></div>
 
 </div>
 
 
-<!-- =========================
-     LOGIN MODAL
-========================= -->
+<!-- LOGIN MODAL -->
 
-<div id="authModal" class="modal">
+<div class="modal" id="loginModal">
 
   <div class="modal-box">
 
     <h2>Login</h2>
 
-    <form id="authForm">
+    <div class="form-group">
+      <label>Email</label>
+      <input id="loginEmail" type="email">
+    </div>
 
-      <div>
-        <label>EMAIL</label>
-        <input id="authEmail" type="email" required>
-      </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input id="loginPassword" type="password">
+    </div>
 
-      <div>
-        <label>PASSWORD</label>
-        <input id="authPassword" type="password" required>
-      </div>
+    <div class="modal-actions">
+      <button onclick="login()">Login</button>
+      <button class="secondary" onclick="closeLoginModal()">Cancel</button>
+    </div>
 
-      <div id="authError" class="error"></div>
-
-      <div class="form-buttons">
-
-        <button type="button" onclick="closeAuthModal()">
-          Cancel
-        </button>
-
-        <button class="add" type="submit">
-          Login
-        </button>
-
-      </div>
-
-    </form>
+    <div id="loginError" style="color:#ff6666;margin-top:12px;"></div>
 
   </div>
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- FEAT MODAL -->
+
+<div class="modal" id="featModal">
+
+  <div class="modal-box">
+
+    <h2 id="modalTitle">Add Feat</h2>
+
+    <input id="editId" type="hidden">
+
+    <div class="form-group">
+      <label>Name</label>
+      <input id="featName">
+    </div>
+
+    <div class="form-group">
+      <label>Game</label>
+      <input id="featGame">
+    </div>
+
+    <div class="form-group">
+      <label>Difficulty</label>
+
+      <select id="featDifficulty">
+        <option value="Extreme">Extreme</option>
+        <option value="Insane">Insane</option>
+        <option value="Hard">Hard</option>
+        <option value="Normal">Normal</option>
+        <option value="Easy">Easy</option>
+      </select>
+
+    </div>
+
+    <div class="form-group">
+      <label>Date</label>
+      <input id="featDate" type="date">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="featDescription"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Proof URL</label>
+      <input id="featProof" type="url">
+    </div>
+
+    <div class="form-group">
+      <label>Thumbnail URL</label>
+      <input id="featThumbnail" type="url">
+    </div>
+
+    <div class="modal-actions">
+
+      <button onclick="saveFeat()">
+        Save
+      </button>
+
+      <button class="secondary" onclick="closeFeatModal()">
+        Cancel
+      </button>
+
+    </div>
+
+    <div id="saveError" style="color:#ff6666;margin-top:12px;"></div>
+
+  </div>
+
+</div>
+
 
 <script>
 
-/* =========================
-   SUPABASE
-========================= */
+  /* =========================
+     SUPABASE
+  ========================= */
 
-const SUPABASE_URL =
-  "https://qptsfclqcoqmlsegkbpt.supabase.co";
+  const SUPABASE_URL =
+    "https://qptsfclqcoqmlsegkbpt.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
+  const SUPABASE_KEY =
+    "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
 
-const OWNER_ID =
-  "d308964b-015f-48f1-a9b2-196c6812f654";
+  const OWNER_ID =
+    "d308964b-015f-48f1-a9b2-196c6812f654";
 
-const IMAGE_BUCKET =
-  "feat-images";
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
 
-let feats = [];
-let currentUser = null;
-let selectedThumbnailFile = null;
+  /* =========================
+     STATE
+  ========================= */
 
+  let feats = [];
+  let currentUser = null;
 
-/* =========================
-   AUTH
-========================= */
 
-async function checkAuth() {
+  const difficultyOrder = [
+    "Extreme",
+    "Insane",
+    "Hard",
+    "Normal",
+    "Easy"
+  ];
 
-  const {
-    data: { session }
-  } = await supabaseClient.auth.getSession();
 
-  currentUser =
-    session ? session.user : null;
+  /* =========================
+     AUTH
+  ========================= */
 
-  updateAuthUI();
-}
+  async function checkAuth() {
 
+    const {
+      data,
+      error
+    } = await supabaseClient.auth.getSession();
 
-supabaseClient.auth.onAuthStateChange(
-  (_event, session) => {
-
-    currentUser =
-      session ? session.user : null;
-
-    updateAuthUI();
-    render();
-
-  }
-);
-
-
-function updateAuthUI() {
-
-  const status =
-    document.getElementById("authStatus");
-
-  const button =
-    document.getElementById("authButton");
-
-  const addButton =
-    document.getElementById("addButton");
-
-  if (
-    currentUser &&
-    currentUser.id === OWNER_ID
-  ) {
-
-    status.textContent =
-      "Logged in";
-
-    button.textContent =
-      "Logout";
-
-    button.onclick =
-      logout;
-
-    addButton.disabled =
-      false;
-
-  } else {
-
-    status.textContent =
-      "Not logged in";
-
-    button.textContent =
-      "Login";
-
-    button.onclick =
-      openAuthModal;
-
-    addButton.disabled =
-      true;
-
-  }
-
-}
-
-
-function openAuthModal() {
-
-  document
-    .getElementById("authModal")
-    .classList.add("open");
-
-}
-
-
-function closeAuthModal() {
-
-  document
-    .getElementById("authModal")
-    .classList.remove("open");
-
-}
-
-
-async function logout() {
-
-  await supabaseClient.auth.signOut();
-
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-document
-  .getElementById("authForm")
-  .addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      const email =
-        document.getElementById("authEmail").value;
-
-      const password =
-        document.getElementById("authPassword").value;
-
-      const errorBox =
-        document.getElementById("authError");
-
-      errorBox.style.display = "none";
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-      if (error) {
-
-        errorBox.textContent =
-          error.message;
-
-        errorBox.style.display =
-          "block";
-
-        return;
-      }
-
-      if (
-        !data.user ||
-        data.user.id !== OWNER_ID
-      ) {
-
-        await supabaseClient.auth.signOut();
-
-        errorBox.textContent =
-          "This account is not authorized.";
-
-        errorBox.style.display =
-          "block";
-
-        return;
-      }
-
-      closeAuthModal();
-
-    }
-  );
-
-
-/* =========================
-   LOAD
-========================= */
-
-async function loadFeats() {
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("feats")
-      .select("*")
-      .order(
-        "created_at",
-        { ascending: true }
-      );
-
-  if (error) {
-
-    console.error(error);
-
-    document.getElementById("grid").innerHTML = `
-      <div class="empty">
-        Failed to load feats.
-      </div>
-    `;
-
-    return;
-  }
-
-  feats =
-    data || [];
-
-  render();
-
-}
-
-
-/* =========================
-   MODAL
-========================= */
-
-function handleAddClick() {
-
-  if (
-    !currentUser ||
-    currentUser.id !== OWNER_ID
-  ) {
-
-    openAuthModal();
-    return;
-
-  }
-
-  openModal();
-
-}
-
-
-function openModal(id = null) {
-
-  if (
-    !currentUser ||
-    currentUser.id !== OWNER_ID
-  ) {
-
-    openAuthModal();
-    return;
-
-  }
-
-  document
-    .getElementById("modal")
-    .classList.add("open");
-
-  document
-    .getElementById("editId")
-    .value =
-    id !== null ? id : "";
-
-  document
-    .getElementById("modalTitle")
-    .textContent =
-    id !== null
-      ? "Edit Feat"
-      : "Add Feat";
-
-  selectedThumbnailFile = null;
-
-  document
-    .getElementById("thumbnailFile")
-    .value = "";
-
-  const preview =
-    document.getElementById("imagePreview");
-
-  preview.src = "";
-  preview.classList.remove("show");
-
-  if (id !== null) {
-
-    const feat =
-      feats.find(
-        f => String(f.id) === String(id)
-      );
-
-    if (!feat) {
-      closeModal();
+    if (error) {
+      console.error(error);
       return;
     }
 
-    document.getElementById("name").value =
-      feat.name || "";
+    currentUser = data.session
+      ? data.session.user
+      : null;
 
-    document.getElementById("game").value =
-      feat.game || "";
-
-    document.getElementById("difficulty").value =
-      feat.difficulty || "Normal";
-
-    document.getElementById("date").value =
-      feat.date || "";
-
-    document.getElementById("description").value =
-      feat.description || "";
-
-    document.getElementById("proof").value =
-      feat.proof_url || "";
-
-    if (feat.thumbnail_url) {
-
-      preview.src =
-        feat.thumbnail_url;
-
-      preview.classList.add("show");
-
-    }
-
-  } else {
-
-    document
-      .getElementById("featForm")
-      .reset();
-
+    updateAuthUI();
   }
 
-}
+
+  function updateAuthUI() {
+
+    const loggedIn =
+      currentUser &&
+      currentUser.id === OWNER_ID;
+
+    document.getElementById("loginButton").style.display =
+      loggedIn ? "none" : "block";
+
+    document.getElementById("logoutButton").style.display =
+      loggedIn ? "block" : "none";
+
+    document.getElementById("addButton").style.display =
+      loggedIn ? "block" : "none";
+
+    document.getElementById("userStatus").textContent =
+      loggedIn ? "Logged in" : "";
+  }
 
 
-function closeModal() {
+  async function login() {
 
-  document
-    .getElementById("modal")
-    .classList.remove("open");
+    const email =
+      document.getElementById("loginEmail").value.trim();
 
-}
+    const password =
+      document.getElementById("loginPassword").value;
+
+    const errorBox =
+      document.getElementById("loginError");
+
+    errorBox.textContent = "";
+
+    const {
+      data,
+      error
+    } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+
+      errorBox.textContent =
+        error.message;
+
+      return;
+    }
+
+    currentUser = data.user;
+
+    updateAuthUI();
+
+    closeLoginModal();
+
+    await loadFeats();
+  }
 
 
-/* =========================
-   IMAGE
-========================= */
+  async function logout() {
 
-document
-  .getElementById("thumbnailFile")
-  .addEventListener(
-    "change",
-    event => {
+    await supabaseClient.auth.signOut();
 
-      const file =
-        event.target.files[0];
+    currentUser = null;
 
-      if (!file) {
+    updateAuthUI();
+  }
 
-        selectedThumbnailFile = null;
-        return;
 
-      }
+  supabaseClient.auth.onAuthStateChange(
+    async (event, session) => {
 
-      selectedThumbnailFile = file;
+      currentUser =
+        session ? session.user : null;
 
-      const reader =
-        new FileReader();
-
-      reader.onload =
-        e => {
-
-          const preview =
-            document.getElementById(
-              "imagePreview"
-            );
-
-          preview.src =
-            e.target.result;
-
-          preview.classList.add("show");
-
-        };
-
-      reader.readAsDataURL(file);
+      updateAuthUI();
 
     }
   );
 
 
-async function uploadThumbnail(file, featId) {
+  /* =========================
+     LOAD FEATS
+  ========================= */
 
-  if (!file) {
-    return null;
-  }
+  async function loadFeats() {
 
-  const {
-    data: sessionData
-  } =
-    await supabaseClient.auth.getSession();
-
-  const session =
-    sessionData.session;
-
-  if (!session) {
-    throw new Error("Login session expired.");
-  }
-
-  const extension =
-    file.name
-      .split(".")
-      .pop()
-      .toLowerCase();
-
-  const filePath =
-    session.user.id +
-    "/" +
-    featId +
-    "-" +
-    Date.now() +
-    "." +
-    extension;
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .storage
-      .from(IMAGE_BUCKET)
-      .upload(
-        filePath,
-        file,
-        {
-          upsert: false,
-          contentType: file.type
-        }
-      );
-
-  if (error) {
-    throw error;
-  }
-
-  const {
-    data
-  } =
-    supabaseClient
-      .storage
-      .from(IMAGE_BUCKET)
-      .getPublicUrl(filePath);
-
-  return data.publicUrl;
-
-}
-
-
-/* =========================
-   SAVE
-========================= */
-
-document
-  .getElementById("featForm")
-  .addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-      if (
-        !currentUser ||
-        currentUser.id !== OWNER_ID
-      ) {
-
-        alert("You must be logged in.");
-        return;
-
-      }
-
-      const saveButton =
-        document.getElementById("saveButton");
-
-      saveButton.disabled = true;
-      saveButton.textContent = "Saving...";
-
-      try {
-
-        const id =
-          document.getElementById("editId").value;
-
-        const featData = {
-
-          name:
-            document
-              .getElementById("name")
-              .value
-              .trim(),
-
-          game:
-            document
-              .getElementById("game")
-              .value
-              .trim(),
-
-          difficulty:
-            document
-              .getElementById("difficulty")
-              .value,
-
-          date:
-            document
-              .getElementById("date")
-              .value ||
-            null,
-
-          description:
-            document
-              .getElementById("description")
-              .value
-              .trim(),
-
-          proof_url:
-            document
-              .getElementById("proof")
-              .value
-              .trim() ||
-            null
-
-        };
-
-        let savedId = id;
-
-        if (!id) {
-
-          /*
-           * New feats start at the
-           * bottom of their difficulty.
-           */
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient
-              .from("feats")
-              .insert({
-                ...featData,
-                placement: 999999
-              })
-              .select()
-              .single();
-
-          if (error) {
-            throw error;
-          }
-
-          savedId =
-            data.id;
-
-        } else {
-
-          const {
-            error
-          } =
-            await supabaseClient
-              .from("feats")
-              .update(featData)
-              .eq("id", id);
-
-          if (error) {
-            throw error;
-          }
-
-        }
-
-        if (selectedThumbnailFile) {
-
-          const thumbnailURL =
-            await uploadThumbnail(
-              selectedThumbnailFile,
-              savedId
-            );
-
-          const {
-            error
-          } =
-            await supabaseClient
-              .from("feats")
-              .update({
-                thumbnail_url:
-                  thumbnailURL
-              })
-              .eq(
-                "id",
-                savedId
-              );
-
-          if (error) {
-            throw error;
-          }
-
-        }
-
-        closeModal();
-
-        selectedThumbnailFile = null;
-
-        await loadFeats();
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "Failed to save feat:\n\n" +
-          error.message
-        );
-
-      } finally {
-
-        saveButton.disabled = false;
-        saveButton.textContent = "Save Feat";
-
-      }
-
-    }
-  );
-
-
-/* =========================
-   DELETE
-========================= */
-
-async function deleteFeat(id) {
-
-  if (
-    !currentUser ||
-    currentUser.id !== OWNER_ID
-  ) {
-    return;
-  }
-
-  if (!confirm("Delete this feat?")) {
-    return;
-  }
-
-  const {
-    error
-  } =
-    await supabaseClient
+    const {
+      data,
+      error
+    } = await supabaseClient
       .from("feats")
-      .delete()
-      .eq("id", id);
+      .select("*");
 
-  if (error) {
+    if (error) {
 
-    alert(
-      "Failed to delete feat:\n\n" +
-      error.message
-    );
+      console.error("Load error:", error);
 
-    return;
-  }
+      document.getElementById("featList").innerHTML =
+        `<div class="empty">
+          Error loading feats.<br>
+          ${escapeHtml(error.message)}
+        </div>`;
 
-  await loadFeats();
-
-}
-
-
-/* =========================
-   MOVE RANK
-========================= */
-
-async function moveFeat(id, direction) {
-
-  if (
-    !currentUser ||
-    currentUser.id !== OWNER_ID
-  ) {
-    return;
-  }
-
-  /*
-   * Sort everything by difficulty first,
-   * then by placement.
-   */
-  const difficultyOrder = {
-    Extreme: 1,
-    Insane: 2,
-    Hard: 3,
-    Normal: 4,
-    Easy: 5
-  };
-
-  const ordered = [...feats].sort((a, b) => {
-
-    const aDiff =
-      difficultyOrder[a.difficulty] || 999;
-
-    const bDiff =
-      difficultyOrder[b.difficulty] || 999;
-
-    if (aDiff !== bDiff) {
-      return aDiff - bDiff;
+      return;
     }
 
-    /*
-     * Existing placement.
-     * NULL placements are placed at the bottom.
-     */
-    const aPlace =
-      a.placement == null
-        ? 999999
-        : Number(a.placement);
+    feats = data || [];
 
-    const bPlace =
-      b.placement == null
-        ? 999999
-        : Number(b.placement);
-
-    return aPlace - bPlace;
-  });
-
-
-  /*
-   * Find the feat being moved.
-   */
-  const index =
-    ordered.findIndex(
-      feat =>
-        String(feat.id) === String(id)
-    );
-
-  if (index === -1) {
-    return;
+    render();
   }
 
 
-  const current =
-    ordered[index];
-
-
-  /*
-   * Find the neighboring feat
-   * in the SAME difficulty.
-   */
-  let targetIndex =
-    direction === "up"
-      ? index - 1
-      : index + 1;
-
-
-  while (
-    targetIndex >= 0 &&
-    targetIndex < ordered.length &&
-    ordered[targetIndex].difficulty !==
-      current.difficulty
-  ) {
-
-    targetIndex +=
-      direction === "up"
-        ? -1
-        : 1;
-
-  }
-
-
-  if (
-    targetIndex < 0 ||
-    targetIndex >= ordered.length
-  ) {
-    return;
-  }
-
-
-  const target =
-    ordered[targetIndex];
-
-
-  /*
-   * Give every feat in this difficulty
-   * a proper placement number if it
-   * doesn't already have one.
-   */
-  const tierFeats =
-    ordered.filter(
-      feat =>
-        feat.difficulty ===
-        current.difficulty
-    );
-
-
-  /*
-   * Assign clean sequential numbers.
-   */
-  for (
-    let i = 0;
-    i < tierFeats.length;
-    i++
-  ) {
-
-    if (
-      tierFeats[i].placement == null
-    ) {
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("feats")
-          .update({
-            placement: i + 1
-          })
-          .eq(
-            "id",
-            tierFeats[i].id
-          );
-
-      if (error) {
-        throw error;
-      }
-
-      tierFeats[i].placement =
-        i + 1;
-    }
-  }
-
-
-  /*
-   * Re-sort now that NULL values
-   * have been given placements.
-   */
-  tierFeats.sort(
-    (a, b) =>
-      Number(a.placement) -
-      Number(b.placement)
-  );
-
-
-  const currentTierIndex =
-    tierFeats.findIndex(
-      feat =>
-        String(feat.id) ===
-        String(current.id)
-    );
-
-
-  const targetTierIndex =
-    tierFeats.findIndex(
-      feat =>
-        String(feat.id) ===
-        String(target.id)
-    );
-
-
-  if (
-    currentTierIndex === -1 ||
-    targetTierIndex === -1
-  ) {
-    return;
-  }
-
-
-  /*
-   * Swap their placement numbers.
-   */
-  const currentPlacement =
-    Number(
-      tierFeats[currentTierIndex]
-        .placement
-    );
-
-  const targetPlacement =
-    Number(
-      tierFeats[targetTierIndex]
-        .placement
-    );
-
-
-  let {
-    error: firstError
-  } =
-    await supabaseClient
-      .from("feats")
-      .update({
-        placement:
-          targetPlacement
-      })
-      .eq(
-        "id",
-        current.id
-      );
-
-
-  if (firstError) {
-
-    console.error(firstError);
-
-    alert(
-      "Failed to move feat:\n\n" +
-      firstError.message
-    );
-
-    return;
-  }
-
-
-  let {
-    error: secondError
-  } =
-    await supabaseClient
-      .from("feats")
-      .update({
-        placement:
-          currentPlacement
-      })
-      .eq(
-        "id",
-        target.id
-      );
-
-
-  if (secondError) {
-
-    console.error(secondError);
-
-    alert(
-      "Failed to move feat:\n\n" +
-      secondError.message
-    );
-
-    return;
-  }
-
-
-  /*
-   * Reload everything so the new
-   * order is displayed immediately.
-   */
-  await loadFeats();
-
-}
-
-  /*
-   * Get the current ordering.
-   */
-
-  const ordered =
-    [...feats].sort(
-      (a, b) =>
-        (a.placement ?? 999999) -
-        (b.placement ?? 999999)
-    );
-
-  const index =
-    ordered.findIndex(
-      f => String(f.id) === String(id)
-    );
-
-  if (index === -1) {
-    return;
-  }
-
-  const current =
-    ordered[index];
-
-  /*
-   * Only swap with another feat
-   * of the SAME difficulty.
-   */
-
-  let targetIndex =
-    direction === "up"
-      ? index - 1
-      : index + 1;
-
-  while (
-    targetIndex >= 0 &&
-    targetIndex < ordered.length &&
-    ordered[targetIndex].difficulty !==
-      current.difficulty
-  ) {
-
-    targetIndex +=
-      direction === "up"
-        ? -1
-        : 1;
-
-  }
-
-  if (
-    targetIndex < 0 ||
-    targetIndex >= ordered.length
-  ) {
-    return;
-  }
-
-  const target =
-    ordered[targetIndex];
-
-  const currentPlacement =
-    current.placement ?? 999999;
-
-  const targetPlacement =
-    target.placement ?? 999999;
-
-  /*
-   * Swap their placement numbers.
-   */
-
-  const {
-    error: error1
-  } =
-    await supabaseClient
-      .from("feats")
-      .update({
-        placement:
-          targetPlacement
-      })
-      .eq(
-        "id",
-        current.id
-      );
-
-  if (error1) {
-
-    alert(
-      "Failed to move feat:\n\n" +
-      error1.message
-    );
-
-    return;
-  }
-
-  const {
-    error: error2
-  } =
-    await supabaseClient
-      .from("feats")
-      .update({
-        placement:
-          currentPlacement
-      })
-      .eq(
-        "id",
-        target.id
-      );
-
-  if (error2) {
-
-    alert(
-      "Failed to move feat:\n\n" +
-      error2.message
-    );
-
-    return;
-  }
-
-  await loadFeats();
-
-}
-
-
-/* =========================
-   HELPERS
-========================= */
-
-function escapeHTML(text) {
-
-  return String(text).replace(
-    /[&<>"']/g,
-    char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    })[char]
-  );
-
-}
-
-
-function safeURL(value) {
-
-  if (!value) {
-    return "";
-  }
-
-  try {
-
-    const url =
-      new URL(value);
-
-    if (
-      url.protocol === "http:" ||
-      url.protocol === "https:"
-    ) {
-
-      return url.href;
-
-    }
-
-  } catch {}
-
-  return "";
-
-}
-
-
-function getYouTubeThumbnail(value) {
-
-  if (!value) {
-    return "";
-  }
-
-  try {
-
-    const url =
-      new URL(value);
-
-    let videoId = "";
-
-    if (
-      url.hostname.includes("youtube.com")
-    ) {
-
-      videoId =
-        url.searchParams.get("v") || "";
-
-      if (
-        !videoId &&
-        url.pathname.startsWith("/shorts/")
-      ) {
-
-        videoId =
-          url.pathname
-            .split("/shorts/")[1]
-            .split("/")[0];
-
-      }
-
-    }
-
-    if (
-      url.hostname === "youtu.be"
-    ) {
-
-      videoId =
-        url.pathname
-          .replace("/", "")
-          .split("/")[0];
-
-    }
-
-    if (!videoId) {
-      return "";
-    }
-
-    return (
-      "https://img.youtube.com/vi/" +
-      encodeURIComponent(videoId) +
-      "/hqdefault.jpg"
-    );
-
-  } catch {
-
-    return "";
-
-  }
-
-}
-
-
-/* =========================
-   DIFFICULTY ORDER
-========================= */
-
-const difficultyOrder = {
-
-  Extreme: 1,
-  Insane: 2,
-  Hard: 3,
-  Normal: 4,
-  Easy: 5
-
-};
-
-
-/* =========================
-   RENDER
-========================= */
-
-function render() {
-
-  const query =
-    document
-      .getElementById("search")
-      .value
-      .toLowerCase();
-
-  const selectedDifficulty =
-    document
-      .getElementById("filter")
-      .value;
-
-  /*
-   * The actual leaderboard is sorted
-   * by placement FIRST.
-   */
-
-  const ranked =
-    [...feats].sort(
-      (a, b) => {
+  /* =========================
+     ORDERING
+  ========================= */
+
+  function getTierFeats(difficulty) {
+
+    return feats
+      .filter(
+        feat => feat.difficulty === difficulty
+      )
+      .sort((a, b) => {
 
         const aPlacement =
-          a.placement ?? 999999;
+          a.placement == null
+            ? Infinity
+            : Number(a.placement);
 
         const bPlacement =
-          b.placement ?? 999999;
+          b.placement == null
+            ? Infinity
+            : Number(b.placement);
 
-        return (
-          aPlacement -
-          bPlacement
-        );
+        if (aPlacement !== bPlacement) {
+          return aPlacement - bPlacement;
+        }
 
-      }
-    );
+        const aDate =
+          new Date(a.created_at || 0).getTime();
 
-  /*
-   * Make sure difficulty categories
-   * remain in Extreme → Easy order.
-   */
+        const bDate =
+          new Date(b.created_at || 0).getTime();
 
-  ranked.sort(
-    (a, b) => {
-
-      const aDiff =
-        difficultyOrder[
-          a.difficulty
-        ] || 999;
-
-      const bDiff =
-        difficultyOrder[
-          b.difficulty
-        ] || 999;
-
-      if (
-        aDiff !== bDiff
-      ) {
-
-        return aDiff - bDiff;
-
-      }
-
-      return (
-        (a.placement ?? 999999) -
-        (b.placement ?? 999999)
-      );
-
-    }
-  );
-
-  /*
-   * Give every feat its displayed
-   * global rank based on the list.
-   */
-
-  ranked.forEach(
-    (feat, index) => {
-
-      feat.displayRank =
-        index + 1;
-
-    }
-  );
-
-  /*
-   * Search/filter AFTER ranking,
-   * so filtering doesn't change
-   * the displayed numbers.
-   */
-
-  const filtered =
-    ranked.filter(
-      feat => {
-
-        const matchesSearch =
-          !query ||
-          (
-            (feat.name || "") +
-            " " +
-            (feat.game || "") +
-            " " +
-            (feat.description || "")
-          )
-          .toLowerCase()
-          .includes(query);
-
-        const matchesDifficulty =
-          !selectedDifficulty ||
-          feat.difficulty ===
-            selectedDifficulty;
-
-        return (
-          matchesSearch &&
-          matchesDifficulty
-        );
-
-      }
-    );
-
-  const grid =
-    document.getElementById("grid");
-
-  if (!filtered.length) {
-
-    grid.innerHTML = `
-      <div class="empty">
-        No feats yet.
-      </div>
-    `;
-
-    return;
-
+        return aDate - bDate;
+      });
   }
 
-  let html = "";
-  let currentDifficulty = null;
 
-  filtered.forEach(
-    (feat, filteredIndex) => {
+  function getAllOrderedFeats() {
+
+    const result = [];
+
+    for (const difficulty of difficultyOrder) {
+
+      const tier =
+        getTierFeats(difficulty);
+
+      result.push(...tier);
+    }
+
+    return result;
+  }
+
+
+  /* =========================
+     RENDER
+  ========================= */
+
+  function render() {
+
+    const search =
+      document.getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const filter =
+      document.getElementById("difficultyFilter")
+        .value;
+
+    const ordered =
+      getAllOrderedFeats();
+
+    const globalRanks =
+      new Map();
+
+    ordered.forEach((feat, index) => {
+
+      globalRanks.set(
+        String(feat.id),
+        index + 1
+      );
+
+    });
+
+
+    let html = "";
+
+    for (const difficulty of difficultyOrder) {
 
       if (
-        feat.difficulty !==
-        currentDifficulty
+        filter !== "all" &&
+        filter !== difficulty
       ) {
+        continue;
+      }
 
-        currentDifficulty =
-          feat.difficulty;
+      let tier =
+        getTierFeats(difficulty);
+
+      tier =
+        tier.filter(feat => {
+
+          const text = [
+            feat.name,
+            feat.game,
+            feat.description,
+            feat.difficulty
+          ]
+          .join(" ")
+          .toLowerCase();
+
+          return text.includes(search);
+        });
+
+
+      if (tier.length === 0) {
+        continue;
+      }
+
+
+      html += `
+        <div class="tier-title">
+          ${difficulty.toUpperCase()}
+        </div>
+      `;
+
+
+      const fullTier =
+        getTierFeats(difficulty);
+
+
+      tier.forEach(feat => {
+
+        const tierIndex =
+          fullTier.findIndex(
+            f => String(f.id) === String(feat.id)
+          );
+
+        const canMoveUp =
+          tierIndex > 0;
+
+        const canMoveDown =
+          tierIndex < fullTier.length - 1;
+
+        const rank =
+          globalRanks.get(String(feat.id));
+
+
+        const thumbnail =
+          feat.thumbnail_url
+            ? `--thumbnail: url(${feat.thumbnail_url});`
+            : `--thumbnail: none;`;
+
 
         html += `
 
-          <div class="tier">
+          <div class="feat">
 
-            <div class="tier-title">
-
-              <span>
-                ${escapeHTML(
-                  currentDifficulty ||
-                  "UNRANKED"
-                )}
-              </span>
-
+            <div class="placement">
+              #${rank}
             </div>
 
-          </div>
+            <div class="feat-content">
 
-        `;
-
-      }
-
-      const proofURL =
-        safeURL(
-          feat.proof_url
-        );
-
-      const thumbnail =
-        safeURL(
-          feat.thumbnail_url
-        ) ||
-        getYouTubeThumbnail(
-          feat.proof_url
-        );
-
-      const thumbnailHTML =
-        thumbnail
-          ? `
-
-            <div class="thumbnail">
-
-              <img
-                src="${escapeHTML(thumbnail)}"
-                alt=""
-                loading="lazy"
-              >
-
-            </div>
-
-          `
-          : `
-
-            <div class="thumbnail"></div>
-
-          `;
-
-      /*
-       * Determine whether this feat
-       * can move up/down within its tier.
-       */
-
-      const sameTier =
-        ranked.filter(
-          f =>
-            f.difficulty ===
-            feat.difficulty
-        );
-
-      const tierIndex =
-        sameTier.findIndex(
-          f =>
-            String(f.id) ===
-            String(feat.id)
-        );
-
-      const canMoveUp =
-        tierIndex > 0;
-
-      const canMoveDown =
-        tierIndex <
-        sameTier.length - 1;
-
-      html += `
-
-        <article class="card">
-
-          <div class="card-content">
-
-            <div class="card-top">
-
-              <div class="placement">
-                #${feat.displayRank}
+              <div class="feat-title">
+                ${escapeHtml(feat.name || "Unnamed Feat")}
               </div>
 
-              <div class="feat-info">
+              ${
+                feat.game
+                  ? `<div class="game">
+                      ${escapeHtml(feat.game)}
+                    </div>`
+                  : ""
+              }
 
-                <div class="game">
-                  ${escapeHTML(
-                    feat.game || ""
-                  )}
-                </div>
+              ${
+                feat.description
+                  ? `<div class="description">
+                      ${escapeHtml(feat.description)}
+                    </div>`
+                  : ""
+              }
 
-                <div class="name">
-                  ${escapeHTML(
-                    feat.name || ""
-                  )}
-                </div>
+              <div class="meta">
+
+                <span class="tag">
+                  ${escapeHtml(feat.difficulty || "")}
+                </span>
 
                 ${
-                  feat.description
+                  feat.date
+                    ? `<span class="tag">
+                        ${escapeHtml(feat.date)}
+                       </span>`
+                    : ""
+                }
+
+              </div>
+
+
+              <div class="actions">
+
+                ${
+                  feat.proof_url
+                    ? `<a
+                        class="proof-link"
+                        href="${escapeAttribute(feat.proof_url)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <button class="secondary">
+                          Proof
+                        </button>
+                       </a>`
+                    : ""
+                }
+
+
+                ${
+                  currentUser &&
+                  currentUser.id === OWNER_ID
                     ? `
 
-                      <div class="description">
-                        ${escapeHTML(
-                          feat.description
-                        )}
+                      <div class="move-buttons">
+
+                        <button
+                          class="secondary"
+                          onclick="moveFeat('${feat.id}', 'up')"
+                          ${canMoveUp ? "" : "disabled"}
+                        >
+                          ↑
+                        </button>
+
+                        <button
+                          class="secondary"
+                          onclick="moveFeat('${feat.id}', 'down')"
+                          ${canMoveDown ? "" : "disabled"}
+                        >
+                          ↓
+                        </button>
+
                       </div>
+
+
+                      <button
+                        class="secondary"
+                        onclick="openEditModal('${feat.id}')"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        class="danger"
+                        onclick="deleteFeat('${feat.id}')"
+                      >
+                        Delete
+                      </button>
 
                     `
                     : ""
@@ -2095,196 +892,725 @@ function render() {
 
             </div>
 
-            <div class="meta">
-
-              <span class="pill">
-                ${escapeHTML(
-                  feat.difficulty || ""
-                )}
-              </span>
-
-              ${
-                feat.date
-                  ? `
-
-                    <span class="pill">
-                      ${escapeHTML(
-                        feat.date
-                      )}
-                    </span>
-
-                  `
-                  : ""
-              }
-
-              ${
-                proofURL
-                  ? `
-
-                    <a
-                      class="proof"
-                      href="${escapeHTML(proofURL)}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-
-                      <button type="button">
-                        Proof ↗
-                      </button>
-
-                    </a>
-
-                  `
-                  : ""
-              }
-
-            </div>
-
-            ${
-              currentUser &&
-              currentUser.id === OWNER_ID
-                ? `
-
-                  <div class="actions">
-
-                    <button
-                      class="move-button"
-                      type="button"
-                      title="Move up"
-                      ${
-                        canMoveUp
-                          ? ""
-                          : "disabled"
-                      }
-                      onclick="moveFeat(
-                        '${feat.id}',
-                        'up'
-                      )"
-                    >
-                      ↑
-                    </button>
-
-                    <button
-                      class="move-button"
-                      type="button"
-                      title="Move down"
-                      ${
-                        canMoveDown
-                          ? ""
-                          : "disabled"
-                      }
-                      onclick="moveFeat(
-                        '${feat.id}',
-                        'down'
-                      )"
-                    >
-                      ↓
-                    </button>
-
-                    <button
-                      type="button"
-                      onclick="openModal('${feat.id}')"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      type="button"
-                      onclick="deleteFeat('${feat.id}')"
-                    >
-                      Delete
-                    </button>
-
-                  </div>
-
-                `
-                : ""
-            }
+            <div
+              class="thumbnail"
+              style="${thumbnail}"
+            ></div>
 
           </div>
+        `;
+      });
+    }
 
-          ${thumbnailHTML}
 
-        </article>
+    if (!html) {
 
-      `;
+      html =
+        `<div class="empty">
+          No feats found.
+        </div>`;
 
     }
-  );
-
-  grid.innerHTML =
-    html;
-
-}
 
 
-/* =========================
-   SEARCH
-========================= */
-
-document
-  .getElementById("search")
-  .addEventListener(
-    "input",
-    render
-  );
-
-document
-  .getElementById("filter")
-  .addEventListener(
-    "change",
-    render
-  );
+    document.getElementById("featList")
+      .innerHTML = html;
+  }
 
 
-/* =========================
-   BACKDROPS
-========================= */
+  /* =========================
+     MOVE FEAT
+  ========================= */
 
-document
-  .getElementById("modal")
-  .addEventListener(
-    "click",
-    event => {
+  async function moveFeat(id, direction) {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      alert("You must be logged in.");
+      return;
+    }
+
+
+    const current =
+      feats.find(
+        feat => String(feat.id) === String(id)
+      );
+
+
+    if (!current) {
+      alert("Feat not found.");
+      return;
+    }
+
+
+    /*
+      Get every feat in this difficulty tier.
+    */
+
+    const tier =
+      getTierFeats(current.difficulty);
+
+
+    /*
+      Normalize placements.
+
+      This fixes existing feats that were
+      created before the placement column
+      existed and therefore have NULL placement.
+    */
+
+    let needsNormalization = false;
+
+    for (let i = 0; i < tier.length; i++) {
 
       if (
-        event.target.id === "modal"
+        Number(tier[i].placement) !== i + 1
       ) {
-        closeModal();
+        needsNormalization = true;
+        break;
       }
 
     }
-  );
 
 
-document
-  .getElementById("authModal")
-  .addEventListener(
-    "click",
-    event => {
+    if (needsNormalization) {
 
-      if (
-        event.target.id === "authModal"
-      ) {
-        closeAuthModal();
+      for (let i = 0; i < tier.length; i++) {
+
+        const {
+          error
+        } = await supabaseClient
+          .from("feats")
+          .update({
+            placement: i + 1
+          })
+          .eq("id", tier[i].id);
+
+
+        if (error) {
+
+          console.error(error);
+
+          alert(
+            "Could not save placement:\n\n" +
+            error.message
+          );
+
+          return;
+        }
+
+      }
+
+
+      /*
+        Update our local copy too.
+      */
+
+      tier.forEach((feat, index) => {
+        feat.placement = index + 1;
+      });
+
+    }
+
+
+    /*
+      Find the current feat again.
+    */
+
+    const currentIndex =
+      tier.findIndex(
+        feat => String(feat.id) === String(id)
+      );
+
+
+    if (currentIndex === -1) {
+      return;
+    }
+
+
+    const targetIndex =
+      direction === "up"
+        ? currentIndex - 1
+        : currentIndex + 1;
+
+
+    /*
+      Already at the top/bottom.
+    */
+
+    if (
+      targetIndex < 0 ||
+      targetIndex >= tier.length
+    ) {
+      return;
+    }
+
+
+    const target =
+      tier[targetIndex];
+
+
+    const currentPlacement =
+      Number(tier[currentIndex].placement);
+
+    const targetPlacement =
+      Number(target.placement);
+
+
+    /*
+      Temporary value prevents conflicts
+      if a unique constraint is ever added.
+    */
+
+    const temporaryPlacement =
+      tier.length + 1000;
+
+
+    /*
+      1. Move current out of the way.
+    */
+
+    let result =
+      await supabaseClient
+        .from("feats")
+        .update({
+          placement: temporaryPlacement
+        })
+        .eq("id", current.id);
+
+
+    if (result.error) {
+
+      alert(
+        "Could not move feat:\n\n" +
+        result.error.message
+      );
+
+      return;
+    }
+
+
+    /*
+      2. Give target the current position.
+    */
+
+    result =
+      await supabaseClient
+        .from("feats")
+        .update({
+          placement: currentPlacement
+        })
+        .eq("id", target.id);
+
+
+    if (result.error) {
+
+      alert(
+        "Could not move feat:\n\n" +
+        result.error.message
+      );
+
+      return;
+    }
+
+
+    /*
+      3. Give current the target position.
+    */
+
+    result =
+      await supabaseClient
+        .from("feats")
+        .update({
+          placement: targetPlacement
+        })
+        .eq("id", current.id);
+
+
+    if (result.error) {
+
+      alert(
+        "Could not move feat:\n\n" +
+        result.error.message
+      );
+
+      return;
+    }
+
+
+    /*
+      Reload everything from Supabase.
+    */
+
+    await loadFeats();
+  }
+
+
+  /* =========================
+     ADD FEAT
+  ========================= */
+
+  function openAddModal() {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      return;
+    }
+
+    document.getElementById("modalTitle")
+      .textContent = "Add Feat";
+
+    document.getElementById("editId")
+      .value = "";
+
+    document.getElementById("featName")
+      .value = "";
+
+    document.getElementById("featGame")
+      .value = "";
+
+    document.getElementById("featDifficulty")
+      .value = "Extreme";
+
+    document.getElementById("featDate")
+      .value = "";
+
+    document.getElementById("featDescription")
+      .value = "";
+
+    document.getElementById("featProof")
+      .value = "";
+
+    document.getElementById("featThumbnail")
+      .value = "";
+
+    document.getElementById("saveError")
+      .textContent = "";
+
+    document.getElementById("featModal")
+      .classList.add("open");
+  }
+
+
+  /* =========================
+     EDIT FEAT
+  ========================= */
+
+  function openEditModal(id) {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      return;
+    }
+
+
+    const feat =
+      feats.find(
+        f => String(f.id) === String(id)
+      );
+
+
+    if (!feat) {
+      return;
+    }
+
+
+    document.getElementById("modalTitle")
+      .textContent = "Edit Feat";
+
+    document.getElementById("editId")
+      .value = feat.id;
+
+    document.getElementById("featName")
+      .value = feat.name || "";
+
+    document.getElementById("featGame")
+      .value = feat.game || "";
+
+    document.getElementById("featDifficulty")
+      .value =
+        feat.difficulty || "Extreme";
+
+    document.getElementById("featDate")
+      .value = feat.date || "";
+
+    document.getElementById("featDescription")
+      .value = feat.description || "";
+
+    document.getElementById("featProof")
+      .value = feat.proof_url || "";
+
+    document.getElementById("featThumbnail")
+      .value = feat.thumbnail_url || "";
+
+    document.getElementById("saveError")
+      .textContent = "";
+
+    document.getElementById("featModal")
+      .classList.add("open");
+  }
+
+
+  /* =========================
+     SAVE FEAT
+  ========================= */
+
+  async function saveFeat() {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      return;
+    }
+
+
+    const editId =
+      document.getElementById("editId")
+        .value;
+
+
+    const difficulty =
+      document.getElementById("featDifficulty")
+        .value;
+
+
+    const featData = {
+
+      name:
+        document.getElementById("featName")
+          .value
+          .trim(),
+
+      game:
+        document.getElementById("featGame")
+          .value
+          .trim(),
+
+      difficulty,
+
+      date:
+        document.getElementById("featDate")
+          .value || null,
+
+      description:
+        document.getElementById("featDescription")
+          .value
+          .trim(),
+
+      proof_url:
+        document.getElementById("featProof")
+          .value
+          .trim() || null,
+
+      thumbnail_url:
+        document.getElementById("featThumbnail")
+          .value
+          .trim() || null
+    };
+
+
+    const errorBox =
+      document.getElementById("saveError");
+
+    errorBox.textContent = "";
+
+
+    if (!featData.name) {
+
+      errorBox.textContent =
+        "Name is required.";
+
+      return;
+    }
+
+
+    /*
+      ADD
+    */
+
+    if (!editId) {
+
+      const sameTier =
+        feats.filter(
+          feat =>
+            feat.difficulty === difficulty
+        );
+
+
+      const maxPlacement =
+        sameTier.reduce(
+          (max, feat) => {
+
+            const placement =
+              Number(feat.placement) || 0;
+
+            return Math.max(
+              max,
+              placement
+            );
+
+          },
+          0
+        );
+
+
+      featData.placement =
+        maxPlacement + 1;
+
+
+      const {
+        error
+      } = await supabaseClient
+        .from("feats")
+        .insert(featData);
+
+
+      if (error) {
+
+        console.error(error);
+
+        errorBox.textContent =
+          error.message;
+
+        return;
       }
 
     }
-  );
 
 
-/* =========================
-   START
-========================= */
+    /*
+      EDIT
+    */
 
-async function startApp() {
+    else {
 
-  await checkAuth();
-  await loadFeats();
+      const oldFeat =
+        feats.find(
+          feat =>
+            String(feat.id) === String(editId)
+        );
 
-}
 
-startApp();
+      /*
+        If difficulty changed,
+        put it at the bottom of the
+        new difficulty tier.
+      */
+
+      if (
+        oldFeat &&
+        oldFeat.difficulty !== difficulty
+      ) {
+
+        const sameTier =
+          feats.filter(
+            feat =>
+              feat.difficulty === difficulty &&
+              String(feat.id) !== String(editId)
+          );
+
+
+        const maxPlacement =
+          sameTier.reduce(
+            (max, feat) => {
+
+              const placement =
+                Number(feat.placement) || 0;
+
+              return Math.max(
+                max,
+                placement
+              );
+
+            },
+            0
+          );
+
+
+        featData.placement =
+          maxPlacement + 1;
+
+      }
+
+
+      const {
+        error
+      } = await supabaseClient
+        .from("feats")
+        .update(featData)
+        .eq("id", editId);
+
+
+      if (error) {
+
+        console.error(error);
+
+        errorBox.textContent =
+          error.message;
+
+        return;
+      }
+
+    }
+
+
+    closeFeatModal();
+
+    await loadFeats();
+  }
+
+
+  /* =========================
+     DELETE
+  ========================= */
+
+  async function deleteFeat(id) {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      return;
+    }
+
+
+    const feat =
+      feats.find(
+        f => String(f.id) === String(id)
+      );
+
+
+    if (!feat) {
+      return;
+    }
+
+
+    const confirmed =
+      confirm(
+        `Delete "${feat.name}"?`
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    const {
+      error
+    } = await supabaseClient
+      .from("feats")
+      .delete()
+      .eq("id", id);
+
+
+    if (error) {
+
+      alert(
+        "Could not delete feat:\n\n" +
+        error.message
+      );
+
+      return;
+    }
+
+
+    await loadFeats();
+  }
+
+
+  /* =========================
+     MODALS
+  ========================= */
+
+  function openLoginModal() {
+
+    document.getElementById("loginError")
+      .textContent = "";
+
+    document.getElementById("loginModal")
+      .classList.add("open");
+  }
+
+
+  function closeLoginModal() {
+
+    document.getElementById("loginModal")
+      .classList.remove("open");
+  }
+
+
+  function closeFeatModal() {
+
+    document.getElementById("featModal")
+      .classList.remove("open");
+  }
+
+
+  /* =========================
+     SEARCH / FILTER
+  ========================= */
+
+  document.getElementById("search")
+    .addEventListener(
+      "input",
+      render
+    );
+
+
+  document.getElementById("difficultyFilter")
+    .addEventListener(
+      "change",
+      render
+    );
+
+
+  /* =========================
+     SECURITY / HTML ESCAPING
+  ========================= */
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  function escapeAttribute(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+
+  /* =========================
+     START
+  ========================= */
+
+  async function start() {
+
+    await checkAuth();
+
+    await loadFeats();
+
+  }
+
+
+  start();
 
 </script>
 
