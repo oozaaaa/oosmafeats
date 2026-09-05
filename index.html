@@ -271,6 +271,7 @@ textarea {
     <button
       id="addButton"
       class="add"
+      type="button"
       onclick="handleAddClick()"
     >
       + Add Feat
@@ -477,7 +478,14 @@ const SUPABASE_PUBLISHABLE_KEY =
 const OWNER_ID =
   "d308964b-015f-48f1-a9b2-196c6812f654";
 
-const supabase =
+
+/*
+  IMPORTANT:
+  The client is deliberately called supabaseClient
+  instead of supabase to avoid a global name collision.
+*/
+
+const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
@@ -497,7 +505,8 @@ async function checkAuth() {
 
   const {
     data: { session }
-  } = await supabase.auth.getSession();
+  } =
+    await supabaseClient.auth.getSession();
 
   currentUser =
     session ? session.user : null;
@@ -507,13 +516,15 @@ async function checkAuth() {
 }
 
 
-supabase.auth.onAuthStateChange(
+supabaseClient.auth.onAuthStateChange(
   (_event, session) => {
 
     currentUser =
       session ? session.user : null;
 
     updateAuthUI();
+
+    render();
 
   }
 );
@@ -588,7 +599,7 @@ function closeAuthModal() {
 async function logout() {
 
   const { error } =
-    await supabase.auth.signOut();
+    await supabaseClient.auth.signOut();
 
   if (error) {
 
@@ -626,14 +637,16 @@ document
 
       errorBox.style.display = "none";
 
+
       const {
         data,
         error
       } =
-        await supabase.auth.signInWithPassword({
+        await supabaseClient.auth.signInWithPassword({
           email,
           password
         });
+
 
       if (error) {
 
@@ -647,12 +660,13 @@ document
 
       }
 
+
       if (
         !data.user ||
         data.user.id !== OWNER_ID
       ) {
 
-        await supabase.auth.signOut();
+        await supabaseClient.auth.signOut();
 
         errorBox.textContent =
           "This account is not authorized.";
@@ -663,6 +677,7 @@ document
         return;
 
       }
+
 
       closeAuthModal();
 
@@ -680,7 +695,7 @@ async function loadFeats() {
     data,
     error
   } =
-    await supabase
+    await supabaseClient
       .from("feats")
       .select("*")
       .order(
@@ -731,13 +746,17 @@ function handleAddClick() {
 
   }
 
+
   if (currentUser.id !== OWNER_ID) {
 
-    alert("You are not authorized.");
+    alert(
+      "You are not authorized."
+    );
 
     return;
 
   }
+
 
   openModal();
 
@@ -938,7 +957,7 @@ document
         ({
           error
         } =
-          await supabase
+          await supabaseClient
             .from("feats")
             .update(featData)
             .eq("id", id));
@@ -948,7 +967,7 @@ document
         ({
           error
         } =
-          await supabase
+          await supabaseClient
             .from("feats")
             .insert(featData));
 
@@ -1014,7 +1033,7 @@ async function deleteFeat(id) {
   const {
     error
   } =
-    await supabase
+    await supabaseClient
       .from("feats")
       .delete()
       .eq("id", id);
@@ -1060,6 +1079,39 @@ function escapeHTML(text) {
 
     })[char]
   );
+
+}
+
+
+/* =========================
+   SAFE URL
+========================= */
+
+function safeURL(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  try {
+
+    const url =
+      new URL(value);
+
+    if (
+      url.protocol === "http:" ||
+      url.protocol === "https:"
+    ) {
+
+      return url.href;
+
+    }
+
+  } catch (error) {
+
+  }
+
+  return "";
 
 }
 
@@ -1136,95 +1188,111 @@ function render() {
 
   grid.innerHTML =
     filtered
-      .map(feat => `
+      .map(feat => {
 
-        <article class="card">
+        const proofURL =
+          safeURL(feat.proof_url);
 
-          <div class="game">
-            ${escapeHTML(feat.game)}
-          </div>
 
-          <div class="name">
-            ${escapeHTML(feat.name)}
-          </div>
+        return `
 
-          <div>
+          <article class="card">
 
-            <span class="pill">
-              ${escapeHTML(feat.difficulty)}
-            </span>
+            <div class="game">
+              ${escapeHTML(
+                feat.game || ""
+              )}
+            </div>
 
-            ${
-              feat.date
-              ? `
-                <span class="pill">
-                  ${escapeHTML(feat.date)}
-                </span>
-              `
-              : ""
-            }
+            <div class="name">
+              ${escapeHTML(
+                feat.name || ""
+              )}
+            </div>
 
-          </div>
+            <div>
 
-          ${
-            feat.description
-            ? `
-              <div class="description">
+              <span class="pill">
                 ${escapeHTML(
-                  feat.description
+                  feat.difficulty || ""
                 )}
-              </div>
-            `
-            : ""
-          }
+              </span>
 
-          <div class="actions">
+              ${
+                feat.date
+                ? `
+                  <span class="pill">
+                    ${escapeHTML(
+                      feat.date
+                    )}
+                  </span>
+                `
+                : ""
+              }
+
+            </div>
 
             ${
-              feat.proof_url
+              feat.description
               ? `
-                <a
-                  class="proof"
-                  href="${escapeHTML(
-                    feat.proof_url
-                  )}"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <button type="button">
-                    Proof ↗
+                <div class="description">
+                  ${escapeHTML(
+                    feat.description
+                  )}
+                </div>
+              `
+              : ""
+            }
+
+            <div class="actions">
+
+              ${
+                proofURL
+                ? `
+                  <a
+                    class="proof"
+                    href="${escapeHTML(
+                      proofURL
+                    )}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button type="button">
+                      Proof ↗
+                    </button>
+                  </a>
+                `
+                : ""
+              }
+
+              ${
+                currentUser &&
+                currentUser.id === OWNER_ID
+                ? `
+                  <button
+                    type="button"
+                    onclick="openModal('${feat.id}')"
+                  >
+                    Edit
                   </button>
-                </a>
-              `
-              : ""
-            }
 
-            ${
-              currentUser &&
-              currentUser.id === OWNER_ID
-              ? `
-                <button
-                  type="button"
-                  onclick="openModal('${feat.id}')"
-                >
-                  Edit
-                </button>
+                  <button
+                    type="button"
+                    onclick="deleteFeat('${feat.id}')"
+                  >
+                    Delete
+                  </button>
+                `
+                : ""
+              }
 
-                <button
-                  type="button"
-                  onclick="deleteFeat('${feat.id}')"
-                >
-                  Delete
-                </button>
-              `
-              : ""
-            }
+            </div>
 
-          </div>
+          </article>
 
-        </article>
+        `;
 
-      `)
+      })
       .join("");
 
 }
