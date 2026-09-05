@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,10 +115,6 @@
       font-size: 13px;
     }
 
-    /* =========================
-       DIFFICULTY TITLES
-    ========================= */
-
     .tier-title {
       text-align: center;
       font-size: 20px;
@@ -127,30 +124,28 @@
       color: #aaa;
     }
 
-    /* =========================
-       FEAT CARD
-    ========================= */
+    /*
+      CARD
 
+      placement | content | proof | thumbnail
+    */
     .feat {
-      position: relative;
-
       display: grid;
 
       /*
-        # | CONTENT | PROOF | THUMBNAIL
+        Smaller content area + dedicated 16:9 thumbnail area.
       */
       grid-template-columns:
-        70px
+        60px
         minmax(0, 1fr)
-        170px
-        300px;
+        150px
+        320px;
 
-      gap: 20px;
+      gap: 16px;
 
-      min-height: 210px;
+      min-height: 190px;
 
       background: #151515;
-
       border: 1px solid #292929;
       border-radius: 12px;
 
@@ -159,16 +154,12 @@
       overflow: hidden;
     }
 
-    /* =========================
-       PLACEMENT
-    ========================= */
-
     .placement {
       display: flex;
       justify-content: center;
       align-items: flex-start;
 
-      padding-top: 25px;
+      padding-top: 22px;
 
       font-size: 24px;
       font-weight: bold;
@@ -176,71 +167,55 @@
       color: #777;
     }
 
-    /* =========================
-       MAIN CONTENT
-    ========================= */
-
     .feat-content {
-      padding: 22px 0;
-
       min-width: 0;
+
+      padding: 20px 0;
 
       display: flex;
       flex-direction: column;
-
       justify-content: center;
     }
 
     .feat-title {
       font-size: 30px;
       line-height: 1.15;
-
       font-weight: bold;
 
-      margin-bottom: 7px;
+      margin-bottom: 6px;
 
       word-break: break-word;
     }
 
     .game {
       color: #999;
-
       font-size: 14px;
 
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .description {
       color: #ccc;
-
-      line-height: 1.5;
+      line-height: 1.45;
 
       white-space: pre-wrap;
 
-      margin-bottom: 16px;
+      margin-bottom: 12px;
 
-      max-width: 800px;
+      max-width: 650px;
     }
-
-    /* =========================
-       TAGS
-    ========================= */
 
     .meta {
       display: flex;
-
       gap: 8px;
-
       flex-wrap: wrap;
-
       align-items: center;
 
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .tag {
       background: #242424;
-
       border: 1px solid #333;
 
       color: #ccc;
@@ -252,47 +227,34 @@
       font-size: 12px;
     }
 
-    /* =========================
-       ACTIONS
-    ========================= */
-
     .actions {
       display: flex;
-
       gap: 7px;
-
       flex-wrap: wrap;
-
       align-items: center;
     }
 
     .actions button {
       padding: 7px 10px;
-
       font-size: 12px;
     }
 
     .move-buttons {
       display: flex;
-
       gap: 5px;
     }
 
     .move-buttons button {
       min-width: 35px;
-
       padding: 7px 8px;
     }
 
-    /* =========================
-       PROOF COLUMN
-    ========================= */
-
+    /*
+      PROOF
+    */
     .proof-area {
       display: flex;
-
       align-items: center;
-
       justify-content: center;
 
       min-width: 0;
@@ -300,26 +262,21 @@
 
     .proof-button {
       display: flex;
-
       align-items: center;
-
       justify-content: center;
 
-      width: 135px;
-      height: 55px;
+      width: 125px;
+      height: 52px;
 
       background: #222;
-
       border: 1px solid #444;
 
       border-radius: 9px;
 
       color: white;
-
       text-decoration: none;
 
       font-size: 15px;
-
       font-weight: bold;
 
       transition:
@@ -330,39 +287,40 @@
 
     .proof-button:hover {
       background: #2d2d2d;
-
       border-color: #555;
 
       transform: translateY(-1px);
     }
 
-    /* =========================
-       THUMBNAIL
-    ========================= */
+    /*
+      THUMBNAIL
 
+      YouTube thumbnails are 16:9.
+
+      The container itself is approximately 16:9,
+      while the image uses contain so the ENTIRE
+      uploaded image remains visible.
+    */
     .thumbnail {
-      min-height: 210px;
+      width: 320px;
 
-      height: 100%;
+      aspect-ratio: 16 / 9;
+
+      align-self: center;
 
       background-color: #101010;
 
       background-image: var(--thumbnail);
 
-      background-size: cover;
-
+      background-size: contain;
       background-position: center;
+      background-repeat: no-repeat;
 
       border-left: 1px solid #292929;
     }
 
-    /* =========================
-       MODALS
-    ========================= */
-
     .modal {
       position: fixed;
-
       inset: 0;
 
       background: rgba(0, 0, 0, .75);
@@ -370,7 +328,6 @@
       display: none;
 
       align-items: center;
-
       justify-content: center;
 
       padding: 20px;
@@ -386,7 +343,6 @@
       width: min(600px, 100%);
 
       background: #151515;
-
       border: 1px solid #333;
 
       border-radius: 12px;
@@ -394,7 +350,6 @@
       padding: 25px;
 
       max-height: 90vh;
-
       overflow-y: auto;
     }
 
@@ -410,7 +365,6 @@
       display: block;
 
       color: #aaa;
-
       font-size: 13px;
 
       margin-bottom: 6px;
@@ -424,22 +378,14 @@
 
     textarea {
       min-height: 120px;
-
       resize: vertical;
     }
 
     .modal-actions {
       display: flex;
-
       gap: 8px;
 
       margin-top: 20px;
-    }
-
-    .proof-link {
-      color: #fff;
-
-      text-decoration: underline;
     }
 
     .empty {
@@ -450,54 +396,62 @@
       padding: 50px 0;
     }
 
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 1050px) {
-
+    /*
+      Medium screens
+    */
+    @media (max-width: 1100px) {
       .feat {
         grid-template-columns:
-          60px
+          55px
           minmax(0, 1fr)
-          140px
-          240px;
+          125px
+          280px;
+      }
+
+      .thumbnail {
+        width: 280px;
       }
 
       .proof-button {
-        width: 115px;
+        width: 110px;
       }
-
     }
 
+    /*
+      Smaller screens
+    */
     @media (max-width: 800px) {
-
       .feat {
         grid-template-columns:
           55px
           1fr;
       }
 
-      .thumbnail {
-        grid-column: 2;
-
-        min-height: 200px;
-
-        border-left: 0;
-
-        border-top: 1px solid #292929;
+      .feat-content {
+        padding-right: 15px;
       }
 
       .proof-area {
         grid-column: 2;
 
-        padding: 15px 0;
+        padding: 10px 0 15px;
       }
 
-      .feat-content {
-        padding-right: 15px;
-      }
+      .thumbnail {
+        grid-column: 2;
 
+        width: 100%;
+
+        max-width: 420px;
+
+        justify-self: center;
+
+        border-left: 0;
+
+        border-top: 1px solid #292929;
+
+        margin-bottom: 15px;
+      }
     }
   </style>
 </head>
@@ -586,9 +540,7 @@
 </div>
 
 
-<!-- =========================
-     LOGIN MODAL
-========================= -->
+<!-- LOGIN MODAL -->
 
 <div class="modal" id="loginModal">
 
@@ -598,9 +550,7 @@
 
     <div class="form-group">
 
-      <label>
-        Email
-      </label>
+      <label>Email</label>
 
       <input
         id="loginEmail"
@@ -611,9 +561,7 @@
 
     <div class="form-group">
 
-      <label>
-        Password
-      </label>
+      <label>Password</label>
 
       <input
         id="loginPassword"
@@ -647,9 +595,7 @@
 </div>
 
 
-<!-- =========================
-     FEAT MODAL
-========================= -->
+<!-- FEAT MODAL -->
 
 <div class="modal" id="featModal">
 
@@ -666,9 +612,7 @@
 
     <div class="form-group">
 
-      <label>
-        Name
-      </label>
+      <label>Name</label>
 
       <input id="featName">
 
@@ -676,9 +620,7 @@
 
     <div class="form-group">
 
-      <label>
-        Game
-      </label>
+      <label>Game</label>
 
       <input id="featGame">
 
@@ -686,9 +628,7 @@
 
     <div class="form-group">
 
-      <label>
-        Difficulty
-      </label>
+      <label>Difficulty</label>
 
       <select id="featDifficulty">
 
@@ -718,9 +658,7 @@
 
     <div class="form-group">
 
-      <label>
-        Date
-      </label>
+      <label>Date</label>
 
       <input
         id="featDate"
@@ -731,9 +669,7 @@
 
     <div class="form-group">
 
-      <label>
-        Description
-      </label>
+      <label>Description</label>
 
       <textarea id="featDescription"></textarea>
 
@@ -741,9 +677,7 @@
 
     <div class="form-group">
 
-      <label>
-        Proof URL
-      </label>
+      <label>Proof URL</label>
 
       <input
         id="featProof"
@@ -754,9 +688,7 @@
 
     <div class="form-group">
 
-      <label>
-        Thumbnail URL
-      </label>
+      <label>Thumbnail URL</label>
 
       <input
         id="featThumbnail"
@@ -792,761 +724,754 @@
 
 <script>
 
-  /* =========================
-     SUPABASE
-  ========================= */
+const SUPABASE_URL =
+  "https://qptsfclqcoqmlsegkbpt.supabase.co";
 
-  const SUPABASE_URL =
-    "https://qptsfclqcoqmlsegkbpt.supabase.co";
+const SUPABASE_KEY =
+  "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
 
-  const SUPABASE_KEY =
-    "sb_publishable_HN6LCZdOXz1Y2jNwBFOzCg_qipdKvev";
+const OWNER_ID =
+  "d308964b-015f-48f1-a9b2-196c6812f654";
 
-  const OWNER_ID =
-    "d308964b-015f-48f1-a9b2-196c6812f654";
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+let feats = [];
+
+let currentUser = null;
+
+
+const difficultyOrder = [
+  "Extreme",
+  "Insane",
+  "Hard",
+  "Normal",
+  "Easy"
+];
+
+
+async function checkAuth() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.getSession();
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+  currentUser =
+    data.session
+      ? data.session.user
+      : null;
+
+  updateAuthUI();
+}
+
+
+function updateAuthUI() {
+
+  const loggedIn =
+    currentUser &&
+    currentUser.id === OWNER_ID;
+
+
+  document.getElementById(
+    "loginButton"
+  ).style.display =
+    loggedIn
+      ? "none"
+      : "block";
+
+
+  document.getElementById(
+    "logoutButton"
+  ).style.display =
+    loggedIn
+      ? "block"
+      : "none";
+
+
+  document.getElementById(
+    "addButton"
+  ).style.display =
+    loggedIn
+      ? "block"
+      : "none";
+
+
+  document.getElementById(
+    "userStatus"
+  ).textContent =
+    loggedIn
+      ? "Logged in"
+      : "";
+}
+
+
+async function login() {
+
+  const email =
+    document.getElementById(
+      "loginEmail"
+    ).value.trim();
+
+
+  const password =
+    document.getElementById(
+      "loginPassword"
+    ).value;
+
+
+  const errorBox =
+    document.getElementById(
+      "loginError"
     );
 
 
-  /* =========================
-     STATE
-  ========================= */
-
-  let feats = [];
-
-  let currentUser = null;
+  errorBox.textContent = "";
 
 
-  const difficultyOrder = [
-    "Extreme",
-    "Insane",
-    "Hard",
-    "Normal",
-    "Easy"
-  ];
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
 
 
-  /* =========================
-     AUTH
-  ========================= */
+  if (error) {
 
-  async function checkAuth() {
+    errorBox.textContent =
+      error.message;
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.getSession();
+    return;
+  }
 
-    if (error) {
 
-      console.error(error);
+  currentUser =
+    data.user;
 
-      return;
-    }
+
+  updateAuthUI();
+
+
+  closeLoginModal();
+
+
+  await loadFeats();
+}
+
+
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+
+  updateAuthUI();
+
+  render();
+}
+
+
+supabaseClient.auth.onAuthStateChange(
+  async (event, session) => {
 
     currentUser =
-      data.session
-        ? data.session.user
+      session
+        ? session.user
         : null;
-
-    updateAuthUI();
-  }
-
-
-  function updateAuthUI() {
-
-    const loggedIn =
-      currentUser &&
-      currentUser.id === OWNER_ID;
-
-
-    document.getElementById(
-      "loginButton"
-    ).style.display =
-      loggedIn ? "none" : "block";
-
-
-    document.getElementById(
-      "logoutButton"
-    ).style.display =
-      loggedIn ? "block" : "none";
-
-
-    document.getElementById(
-      "addButton"
-    ).style.display =
-      loggedIn ? "block" : "none";
-
-
-    document.getElementById(
-      "userStatus"
-    ).textContent =
-      loggedIn
-        ? "Logged in"
-        : "";
-  }
-
-
-  async function login() {
-
-    const email =
-      document.getElementById(
-        "loginEmail"
-      ).value.trim();
-
-
-    const password =
-      document.getElementById(
-        "loginPassword"
-      ).value;
-
-
-    const errorBox =
-      document.getElementById(
-        "loginError"
-      );
-
-
-    errorBox.textContent = "";
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth
-        .signInWithPassword({
-
-          email,
-
-          password
-
-        });
-
-
-    if (error) {
-
-      errorBox.textContent =
-        error.message;
-
-      return;
-    }
-
-
-    currentUser =
-      data.user;
-
-
-    updateAuthUI();
-
-
-    closeLoginModal();
-
-
-    await loadFeats();
-  }
-
-
-  async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    currentUser = null;
 
     updateAuthUI();
 
     render();
+
+  }
+);
+
+
+async function loadFeats() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("feats")
+      .select("*");
+
+
+  if (error) {
+
+    console.error(
+      "Load error:",
+      error
+    );
+
+
+    document.getElementById(
+      "featList"
+    ).innerHTML =
+      `<div class="empty">
+        Error loading feats.<br>
+        ${escapeHtml(error.message)}
+      </div>`;
+
+
+    return;
   }
 
 
-  supabaseClient.auth.onAuthStateChange(
-    async (event, session) => {
+  feats = data || [];
 
-      currentUser =
-        session
-          ? session.user
-          : null;
+  render();
+}
 
-      updateAuthUI();
 
-      render();
+function getTierFeats(difficulty) {
+
+  return feats
+
+    .filter(
+      feat =>
+        feat.difficulty ===
+        difficulty
+    )
+
+    .sort((a, b) => {
+
+      const aPlacement =
+        a.placement == null
+          ? Infinity
+          : Number(a.placement);
+
+
+      const bPlacement =
+        b.placement == null
+          ? Infinity
+          : Number(b.placement);
+
+
+      if (
+        aPlacement !==
+        bPlacement
+      ) {
+
+        return (
+          aPlacement -
+          bPlacement
+        );
+      }
+
+
+      const aDate =
+        new Date(
+          a.created_at || 0
+        ).getTime();
+
+
+      const bDate =
+        new Date(
+          b.created_at || 0
+        ).getTime();
+
+
+      return (
+        aDate -
+        bDate
+      );
+
+    });
+}
+
+
+function getAllOrderedFeats() {
+
+  const result = [];
+
+
+  for (
+    const difficulty
+    of difficultyOrder
+  ) {
+
+    const tier =
+      getTierFeats(
+        difficulty
+      );
+
+
+    result.push(...tier);
+
+  }
+
+
+  return result;
+}
+
+
+function render() {
+
+  const search =
+    document.getElementById(
+      "search"
+    ).value
+      .toLowerCase()
+      .trim();
+
+
+  const filter =
+    document.getElementById(
+      "difficultyFilter"
+    ).value;
+
+
+  const ordered =
+    getAllOrderedFeats();
+
+
+  const globalRanks =
+    new Map();
+
+
+  ordered.forEach(
+    (feat, index) => {
+
+      globalRanks.set(
+        String(feat.id),
+        index + 1
+      );
 
     }
   );
 
 
-  /* =========================
-     LOAD FEATS
-  ========================= */
-
-  async function loadFeats() {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("feats")
-        .select("*");
+  let html = "";
 
 
-    if (error) {
+  for (
+    const difficulty
+    of difficultyOrder
+  ) {
 
-      console.error(
-        "Load error:",
-        error
+    if (
+      filter !== "all" &&
+      filter !== difficulty
+    ) {
+
+      continue;
+    }
+
+
+    let tier =
+      getTierFeats(
+        difficulty
       );
 
 
-      document.getElementById(
-        "featList"
-      ).innerHTML =
+    tier =
+      tier.filter(
+        feat => {
 
-        `<div class="empty">
-          Error loading feats.<br>
-          ${escapeHtml(error.message)}
-        </div>`;
+          const text = [
 
-      return;
-    }
+            feat.name,
+            feat.game,
+            feat.description,
+            feat.difficulty
 
-
-    feats =
-      data || [];
-
-
-    render();
-  }
+          ]
+            .join(" ")
+            .toLowerCase();
 
 
-  /* =========================
-     TIER ORDER
-  ========================= */
-
-  function getTierFeats(difficulty) {
-
-    return feats
-
-      .filter(
-        feat =>
-          feat.difficulty === difficulty
-      )
-
-      .sort((a, b) => {
-
-        const aPlacement =
-          a.placement == null
-            ? Infinity
-            : Number(a.placement);
-
-
-        const bPlacement =
-          b.placement == null
-            ? Infinity
-            : Number(b.placement);
-
-
-        if (
-          aPlacement !== bPlacement
-        ) {
-
-          return (
-            aPlacement -
-            bPlacement
+          return text.includes(
+            search
           );
 
         }
+      );
 
 
-        const aDate =
-          new Date(
-            a.created_at || 0
-          ).getTime();
-
-
-        const bDate =
-          new Date(
-            b.created_at || 0
-          ).getTime();
-
-
-        return aDate - bDate;
-
-      });
-  }
-
-
-  function getAllOrderedFeats() {
-
-    const result = [];
-
-
-    for (
-      const difficulty
-      of difficultyOrder
+    if (
+      tier.length === 0
     ) {
 
-      const tier =
-        getTierFeats(
-          difficulty
-        );
-
-
-      result.push(...tier);
-
+      continue;
     }
 
 
-    return result;
-  }
+    html += `
+
+      <div class="tier-title">
+
+        ${difficulty.toUpperCase()}
+
+      </div>
+
+    `;
 
 
-  /* =========================
-     RENDER
-  ========================= */
-
-  function render() {
-
-    const search =
-      document.getElementById(
-        "search"
-      )
-      .value
-      .toLowerCase()
-      .trim();
+    const fullTier =
+      getTierFeats(
+        difficulty
+      );
 
 
-    const filter =
-      document.getElementById(
-        "difficultyFilter"
-      )
-      .value;
+    tier.forEach(
+      feat => {
 
-
-    const ordered =
-      getAllOrderedFeats();
-
-
-    const globalRanks =
-      new Map();
-
-
-    ordered.forEach(
-      (feat, index) => {
-
-        globalRanks.set(
-          String(feat.id),
-          index + 1
-        );
-
-      }
-    );
-
-
-    let html = "";
-
-
-    for (
-      const difficulty
-      of difficultyOrder
-    ) {
-
-      if (
-        filter !== "all" &&
-        filter !== difficulty
-      ) {
-
-        continue;
-
-      }
-
-
-      let tier =
-        getTierFeats(
-          difficulty
-        );
-
-
-      tier =
-        tier.filter(
-          feat => {
-
-            const text = [
-
-              feat.name,
-
-              feat.game,
-
-              feat.description,
-
-              feat.difficulty
-
-            ]
-
-              .join(" ")
-
-              .toLowerCase();
-
-
-            return text.includes(
-              search
-            );
-
-          }
-        );
-
-
-      if (
-        tier.length === 0
-      ) {
-
-        continue;
-
-      }
-
-
-      html += `
-
-        <div class="tier-title">
-
-          ${difficulty.toUpperCase()}
-
-        </div>
-
-      `;
-
-
-      const fullTier =
-        getTierFeats(
-          difficulty
-        );
-
-
-      tier.forEach(
-        feat => {
-
-          const tierIndex =
-            fullTier.findIndex(
-              f =>
-                String(f.id) ===
-                String(feat.id)
-            );
-
-
-          const canMoveUp =
-            tierIndex > 0;
-
-
-          const canMoveDown =
-            tierIndex <
-            fullTier.length - 1;
-
-
-          const rank =
-            globalRanks.get(
+        const tierIndex =
+          fullTier.findIndex(
+            f =>
+              String(f.id) ===
               String(feat.id)
-            );
+          );
 
 
-          const thumbnailStyle =
-            feat.thumbnail_url
-
-              ? `--thumbnail: url(${feat.thumbnail_url});`
-
-              : `--thumbnail: none;`;
+        const canMoveUp =
+          tierIndex > 0;
 
 
-          html += `
+        const canMoveDown =
+          tierIndex <
+          fullTier.length - 1;
 
-            <div class="feat">
 
-              <!-- PLACEMENT -->
+        const rank =
+          globalRanks.get(
+            String(feat.id)
+          );
 
-              <div class="placement">
 
-                #${rank}
+        /*
+          IMPORTANT:
+
+          Do NOT put quotes around the
+          URL inside url().
+
+          This allows YouTube thumbnail
+          URLs to work correctly.
+        */
+
+        const thumbnailStyle =
+          feat.thumbnail_url
+            ? `--thumbnail: url(${feat.thumbnail_url});`
+            : `--thumbnail: none;`;
+
+
+        html += `
+
+          <div class="feat">
+
+
+            <!-- PLACEMENT -->
+
+            <div class="placement">
+
+              #${rank}
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="feat-content">
+
+
+              <div class="feat-title">
+
+                ${escapeHtml(
+                  feat.name ||
+                  "Unnamed Feat"
+                )}
 
               </div>
 
 
-              <!-- CONTENT -->
+              ${
+                feat.game
+                  ? `
 
-              <div class="feat-content">
+                    <div class="game">
 
-                <div class="feat-title">
+                      ${escapeHtml(
+                        feat.game
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              ${
+                feat.description
+                  ? `
+
+                    <div class="description">
+
+                      ${escapeHtml(
+                        feat.description
+                      )}
+
+                    </div>
+
+                  `
+                  : ""
+              }
+
+
+              <div class="meta">
+
+
+                <span class="tag">
 
                   ${escapeHtml(
-                    feat.name ||
-                    "Unnamed Feat"
+                    feat.difficulty ||
+                    ""
                   )}
 
-                </div>
+                </span>
 
 
                 ${
-                  feat.game
-
+                  feat.date
                     ? `
 
-                      <div class="game">
+                      <span class="tag">
 
                         ${escapeHtml(
-                          feat.game
+                          feat.date
                         )}
 
-                      </div>
+                      </span>
 
                     `
-
                     : ""
                 }
 
 
-                ${
-                  feat.description
-
-                    ? `
-
-                      <div class="description">
-
-                        ${escapeHtml(
-                          feat.description
-                        )}
-
-                      </div>
-
-                    `
-
-                    : ""
-                }
+              </div>
 
 
-                <div class="meta">
+              ${
+                currentUser &&
+                currentUser.id === OWNER_ID
 
-                  <span class="tag">
+                  ? `
 
-                    ${escapeHtml(
-                      feat.difficulty ||
-                      ""
-                    )}
-
-                  </span>
+                    <div class="actions">
 
 
-                  ${
-                    feat.date
-
-                      ? `
-
-                        <span class="tag">
-
-                          ${escapeHtml(
-                            feat.date
-                          )}
-
-                        </span>
-
-                      `
-
-                      : ""
-                  }
-
-                </div>
-
-
-                <!-- ADMIN BUTTONS -->
-
-                ${
-                  currentUser &&
-                  currentUser.id === OWNER_ID
-
-                    ? `
-
-                      <div class="actions">
-
-                        <div class="move-buttons">
-
-                          <button
-                            class="secondary"
-                            onclick="moveFeat('${feat.id}', 'up')"
-                            ${canMoveUp ? "" : "disabled"}
-                          >
-
-                            ↑
-
-                          </button>
-
-
-                          <button
-                            class="secondary"
-                            onclick="moveFeat('${feat.id}', 'down')"
-                            ${canMoveDown ? "" : "disabled"}
-                          >
-
-                            ↓
-
-                          </button>
-
-                        </div>
+                      <div class="move-buttons">
 
 
                         <button
                           class="secondary"
-                          onclick="openEditModal('${feat.id}')"
+                          onclick="moveFeat('${feat.id}', 'up')"
+                          ${canMoveUp ? "" : "disabled"}
                         >
-
-                          Edit
-
+                          ↑
                         </button>
 
 
                         <button
-                          class="danger"
-                          onclick="deleteFeat('${feat.id}')"
+                          class="secondary"
+                          onclick="moveFeat('${feat.id}', 'down')"
+                          ${canMoveDown ? "" : "disabled"}
                         >
-
-                          Delete
-
+                          ↓
                         </button>
+
 
                       </div>
 
-                    `
 
-                    : ""
-                }
-
-              </div>
-
-
-              <!-- PROOF -->
-
-              ${
-                feat.proof_url
-
-                  ? `
-
-                    <div class="proof-area">
-
-                      <a
-                        class="proof-button"
-                        href="${escapeAttribute(
-                          feat.proof_url
-                        )}"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        class="secondary"
+                        onclick="openEditModal('${feat.id}')"
                       >
+                        Edit
+                      </button>
 
-                        Proof
 
-                      </a>
+                      <button
+                        class="danger"
+                        onclick="deleteFeat('${feat.id}')"
+                      >
+                        Delete
+                      </button>
+
 
                     </div>
 
                   `
 
-                  : `
-
-                    <div class="proof-area"></div>
-
-                  `
+                  : ""
               }
 
 
-              <!-- THUMBNAIL -->
-
-              <div
-                class="thumbnail"
-                style="${thumbnailStyle}"
-              ></div>
-
             </div>
 
-          `;
 
-        }
-      );
+            <!-- PROOF -->
 
-    }
+            ${
+              feat.proof_url
 
+                ? `
 
-    if (!html) {
-
-      html =
-
-        `<div class="empty">
-
-          No feats found.
-
-        </div>`;
-
-    }
+                  <div class="proof-area">
 
 
-    document.getElementById(
-      "featList"
-    ).innerHTML = html;
+                    <a
+                      class="proof-button"
+                      href="${escapeAttribute(
+                        feat.proof_url
+                      )}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+
+                      Proof
+
+                    </a>
+
+
+                  </div>
+
+                `
+
+                : `
+
+                  <div class="proof-area"></div>
+
+                `
+            }
+
+
+            <!-- THUMBNAIL -->
+
+            <div
+              class="thumbnail"
+              style="${thumbnailStyle}"
+            ></div>
+
+
+          </div>
+
+        `;
+
+      }
+    );
+
   }
 
 
-  /* =========================
-     MOVE FEAT
-  ========================= */
+  if (!html) {
 
-  async function moveFeat(
-    id,
-    direction
+    html =
+      `<div class="empty">
+
+        No feats found.
+
+      </div>`;
+
+  }
+
+
+  document.getElementById(
+    "featList"
+  ).innerHTML =
+    html;
+}
+
+
+async function moveFeat(
+  id,
+  direction
+) {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    alert(
+      "You must be logged in."
+    );
+
+    return;
+  }
+
+
+  const current =
+    feats.find(
+      feat =>
+        String(feat.id) ===
+        String(id)
+    );
+
+
+  if (!current) {
+
+    alert(
+      "Feat not found."
+    );
+
+    return;
+  }
+
+
+  const tier =
+    getTierFeats(
+      current.difficulty
+    );
+
+
+  let needsNormalization =
+    false;
+
+
+  for (
+    let i = 0;
+    i < tier.length;
+    i++
   ) {
 
     if (
-      !currentUser ||
-      currentUser.id !== OWNER_ID
+      Number(
+        tier[i].placement
+      ) !== i + 1
     ) {
 
-      alert(
-        "You must be logged in."
-      );
+      needsNormalization =
+        true;
 
-      return;
+      break;
     }
 
-
-    const current =
-      feats.find(
-        feat =>
-          String(feat.id) ===
-          String(id)
-      );
+  }
 
 
-    if (!current) {
-
-      alert(
-        "Feat not found."
-      );
-
-      return;
-    }
-
-
-    const tier =
-      getTierFeats(
-        current.difficulty
-      );
-
-
-    /*
-      Normalize placement values.
-    */
-
-    let needsNormalization =
-      false;
-
+  if (needsNormalization) {
 
     for (
       let i = 0;
@@ -1554,504 +1479,524 @@
       i++
     ) {
 
-      if (
-        Number(
-          tier[i].placement
-        ) !== i + 1
-      ) {
+      const {
+        error
+      } =
+        await supabaseClient
 
-        needsNormalization =
-          true;
+          .from("feats")
 
-        break;
+          .update({
+            placement:
+              i + 1
+          })
 
-      }
+          .eq(
+            "id",
+            tier[i].id
+          );
 
-    }
 
+      if (error) {
 
-    if (
-      needsNormalization
-    ) {
-
-      for (
-        let i = 0;
-        i < tier.length;
-        i++
-      ) {
-
-        const {
+        console.error(
           error
-        } =
-          await supabaseClient
-            .from("feats")
-            .update({
-
-              placement:
-                i + 1
-
-            })
-            .eq(
-              "id",
-              tier[i].id
-            );
+        );
 
 
-        if (error) {
-
-          console.error(
-            error
-          );
-
-
-          alert(
-            "Could not save placement:\n\n" +
-            error.message
-          );
-
-          return;
-        }
+        alert(
+          "Could not save placement:\n\n" +
+          error.message
+        );
 
 
-        tier[i].placement =
-          i + 1;
-
+        return;
       }
 
+
+      tier[i].placement =
+        i + 1;
     }
 
+  }
 
-    const currentIndex =
-      tier.findIndex(
+
+  const currentIndex =
+    tier.findIndex(
+      feat =>
+        String(feat.id) ===
+        String(id)
+    );
+
+
+  if (
+    currentIndex === -1
+  ) {
+
+    return;
+  }
+
+
+  const targetIndex =
+    direction === "up"
+
+      ? currentIndex - 1
+
+      : currentIndex + 1;
+
+
+  if (
+    targetIndex < 0 ||
+    targetIndex >= tier.length
+  ) {
+
+    return;
+  }
+
+
+  const target =
+    tier[targetIndex];
+
+
+  const currentPlacement =
+    Number(
+      tier[currentIndex].placement
+    );
+
+
+  const targetPlacement =
+    Number(
+      target.placement
+    );
+
+
+  const temporaryPlacement =
+    tier.length + 1000;
+
+
+  let result =
+    await supabaseClient
+
+      .from("feats")
+
+      .update({
+        placement:
+          temporaryPlacement
+      })
+
+      .eq(
+        "id",
+        current.id
+      );
+
+
+  if (result.error) {
+
+    alert(
+      "Could not move feat:\n\n" +
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  result =
+    await supabaseClient
+
+      .from("feats")
+
+      .update({
+        placement:
+          currentPlacement
+      })
+
+      .eq(
+        "id",
+        target.id
+      );
+
+
+  if (result.error) {
+
+    alert(
+      "Could not move feat:\n\n" +
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  result =
+    await supabaseClient
+
+      .from("feats")
+
+      .update({
+        placement:
+          targetPlacement
+      })
+
+      .eq(
+        "id",
+        current.id
+      );
+
+
+  if (result.error) {
+
+    alert(
+      "Could not move feat:\n\n" +
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  await loadFeats();
+}
+
+
+function openAddModal() {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    return;
+  }
+
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent =
+    "Add Feat";
+
+
+  document.getElementById(
+    "editId"
+  ).value = "";
+
+
+  document.getElementById(
+    "featName"
+  ).value = "";
+
+
+  document.getElementById(
+    "featGame"
+  ).value = "";
+
+
+  document.getElementById(
+    "featDifficulty"
+  ).value =
+    "Extreme";
+
+
+  document.getElementById(
+    "featDate"
+  ).value = "";
+
+
+  document.getElementById(
+    "featDescription"
+  ).value = "";
+
+
+  document.getElementById(
+    "featProof"
+  ).value = "";
+
+
+  document.getElementById(
+    "featThumbnail"
+  ).value = "";
+
+
+  document.getElementById(
+    "saveError"
+  ).textContent = "";
+
+
+  document.getElementById(
+    "featModal"
+  ).classList.add(
+    "open"
+  );
+}
+
+
+function openEditModal(id) {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    return;
+  }
+
+
+  const feat =
+    feats.find(
+      f =>
+        String(f.id) ===
+        String(id)
+    );
+
+
+  if (!feat) {
+
+    return;
+  }
+
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent =
+    "Edit Feat";
+
+
+  document.getElementById(
+    "editId"
+  ).value =
+    feat.id;
+
+
+  document.getElementById(
+    "featName"
+  ).value =
+    feat.name || "";
+
+
+  document.getElementById(
+    "featGame"
+  ).value =
+    feat.game || "";
+
+
+  document.getElementById(
+    "featDifficulty"
+  ).value =
+    feat.difficulty ||
+    "Extreme";
+
+
+  document.getElementById(
+    "featDate"
+  ).value =
+    feat.date || "";
+
+
+  document.getElementById(
+    "featDescription"
+  ).value =
+    feat.description || "";
+
+
+  document.getElementById(
+    "featProof"
+  ).value =
+    feat.proof_url || "";
+
+
+  document.getElementById(
+    "featThumbnail"
+  ).value =
+    feat.thumbnail_url || "";
+
+
+  document.getElementById(
+    "saveError"
+  ).textContent = "";
+
+
+  document.getElementById(
+    "featModal"
+  ).classList.add(
+    "open"
+  );
+}
+
+
+async function saveFeat() {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    return;
+  }
+
+
+  const editId =
+    document.getElementById(
+      "editId"
+    ).value;
+
+
+  const difficulty =
+    document.getElementById(
+      "featDifficulty"
+    ).value;
+
+
+  const featData = {
+
+    name:
+      document.getElementById(
+        "featName"
+      ).value.trim(),
+
+
+    game:
+      document.getElementById(
+        "featGame"
+      ).value.trim(),
+
+
+    difficulty,
+
+
+    date:
+      document.getElementById(
+        "featDate"
+      ).value ||
+      null,
+
+
+    description:
+      document.getElementById(
+        "featDescription"
+      ).value.trim(),
+
+
+    proof_url:
+      document.getElementById(
+        "featProof"
+      ).value.trim() ||
+      null,
+
+
+    thumbnail_url:
+      document.getElementById(
+        "featThumbnail"
+      ).value.trim() ||
+      null
+
+  };
+
+
+  const errorBox =
+    document.getElementById(
+      "saveError"
+    );
+
+
+  errorBox.textContent = "";
+
+
+  if (
+    !featData.name
+  ) {
+
+    errorBox.textContent =
+      "Name is required.";
+
+    return;
+  }
+
+
+  if (!editId) {
+
+    const sameTier =
+      feats.filter(
         feat =>
-          String(feat.id) ===
-          String(id)
+          feat.difficulty ===
+          difficulty
       );
 
 
-    if (
-      currentIndex === -1
-    ) {
+    const maxPlacement =
+      sameTier.reduce(
+        (max, feat) => {
 
-      return;
-
-    }
-
-
-    const targetIndex =
-      direction === "up"
-
-        ? currentIndex - 1
-
-        : currentIndex + 1;
+          const placement =
+            Number(
+              feat.placement
+            ) || 0;
 
 
-    if (
-      targetIndex < 0 ||
-      targetIndex >= tier.length
-    ) {
+          return Math.max(
+            max,
+            placement
+          );
 
-      return;
-
-    }
-
-
-    const target =
-      tier[targetIndex];
-
-
-    const currentPlacement =
-      Number(
-        tier[currentIndex].placement
+        },
+        0
       );
 
 
-    const targetPlacement =
-      Number(
-        target.placement
-      );
+    featData.placement =
+      maxPlacement + 1;
 
 
-    const temporaryPlacement =
-      tier.length + 1000;
-
-
-    /*
-      Move current temporarily.
-    */
-
-    let result =
+    const {
+      error
+    } =
       await supabaseClient
+
         .from("feats")
-        .update({
 
-          placement:
-            temporaryPlacement
-
-        })
-        .eq(
-          "id",
-          current.id
+        .insert(
+          featData
         );
 
 
-    if (result.error) {
+    if (error) {
 
-      alert(
-        "Could not move feat:\n\n" +
-        result.error.message
+      console.error(
+        error
       );
 
-      return;
-    }
-
-
-    /*
-      Move target into current position.
-    */
-
-    result =
-      await supabaseClient
-        .from("feats")
-        .update({
-
-          placement:
-            currentPlacement
-
-        })
-        .eq(
-          "id",
-          target.id
-        );
-
-
-    if (result.error) {
-
-      alert(
-        "Could not move feat:\n\n" +
-        result.error.message
-      );
-
-      return;
-    }
-
-
-    /*
-      Move current into target position.
-    */
-
-    result =
-      await supabaseClient
-        .from("feats")
-        .update({
-
-          placement:
-            targetPlacement
-
-        })
-        .eq(
-          "id",
-          current.id
-        );
-
-
-    if (result.error) {
-
-      alert(
-        "Could not move feat:\n\n" +
-        result.error.message
-      );
-
-      return;
-    }
-
-
-    await loadFeats();
-
-  }
-
-
-  /* =========================
-     ADD MODAL
-  ========================= */
-
-  function openAddModal() {
-
-    if (
-      !currentUser ||
-      currentUser.id !== OWNER_ID
-    ) {
-
-      return;
-
-    }
-
-
-    document.getElementById(
-      "modalTitle"
-    ).textContent =
-      "Add Feat";
-
-
-    document.getElementById(
-      "editId"
-    ).value = "";
-
-
-    document.getElementById(
-      "featName"
-    ).value = "";
-
-
-    document.getElementById(
-      "featGame"
-    ).value = "";
-
-
-    document.getElementById(
-      "featDifficulty"
-    ).value =
-      "Extreme";
-
-
-    document.getElementById(
-      "featDate"
-    ).value = "";
-
-
-    document.getElementById(
-      "featDescription"
-    ).value = "";
-
-
-    document.getElementById(
-      "featProof"
-    ).value = "";
-
-
-    document.getElementById(
-      "featThumbnail"
-    ).value = "";
-
-
-    document.getElementById(
-      "saveError"
-    ).textContent = "";
-
-
-    document.getElementById(
-      "featModal"
-    ).classList.add(
-      "open"
-    );
-  }
-
-
-  /* =========================
-     EDIT MODAL
-  ========================= */
-
-  function openEditModal(id) {
-
-    if (
-      !currentUser ||
-      currentUser.id !== OWNER_ID
-    ) {
-
-      return;
-
-    }
-
-
-    const feat =
-      feats.find(
-        f =>
-          String(f.id) ===
-          String(id)
-      );
-
-
-    if (!feat) {
-
-      return;
-
-    }
-
-
-    document.getElementById(
-      "modalTitle"
-    ).textContent =
-      "Edit Feat";
-
-
-    document.getElementById(
-      "editId"
-    ).value =
-      feat.id;
-
-
-    document.getElementById(
-      "featName"
-    ).value =
-      feat.name || "";
-
-
-    document.getElementById(
-      "featGame"
-    ).value =
-      feat.game || "";
-
-
-    document.getElementById(
-      "featDifficulty"
-    ).value =
-      feat.difficulty ||
-      "Extreme";
-
-
-    document.getElementById(
-      "featDate"
-    ).value =
-      feat.date || "";
-
-
-    document.getElementById(
-      "featDescription"
-    ).value =
-      feat.description || "";
-
-
-    document.getElementById(
-      "featProof"
-    ).value =
-      feat.proof_url || "";
-
-
-    document.getElementById(
-      "featThumbnail"
-    ).value =
-      feat.thumbnail_url || "";
-
-
-    document.getElementById(
-      "saveError"
-    ).textContent = "";
-
-
-    document.getElementById(
-      "featModal"
-    ).classList.add(
-      "open"
-    );
-  }
-
-
-  /* =========================
-     SAVE FEAT
-  ========================= */
-
-  async function saveFeat() {
-
-    if (
-      !currentUser ||
-      currentUser.id !== OWNER_ID
-    ) {
-
-      return;
-
-    }
-
-
-    const editId =
-      document.getElementById(
-        "editId"
-      ).value;
-
-
-    const difficulty =
-      document.getElementById(
-        "featDifficulty"
-      ).value;
-
-
-    const featData = {
-
-      name:
-        document.getElementById(
-          "featName"
-        ).value.trim(),
-
-
-      game:
-        document.getElementById(
-          "featGame"
-        ).value.trim(),
-
-
-      difficulty,
-
-
-      date:
-        document.getElementById(
-          "featDate"
-        ).value ||
-        null,
-
-
-      description:
-        document.getElementById(
-          "featDescription"
-        ).value.trim(),
-
-
-      proof_url:
-        document.getElementById(
-          "featProof"
-        ).value.trim() ||
-        null,
-
-
-      thumbnail_url:
-        document.getElementById(
-          "featThumbnail"
-        ).value.trim() ||
-        null
-
-    };
-
-
-    const errorBox =
-      document.getElementById(
-        "saveError"
-      );
-
-
-    errorBox.textContent = "";
-
-
-    if (
-      !featData.name
-    ) {
 
       errorBox.textContent =
-        "Name is required.";
+        error.message;
 
       return;
-
     }
 
+  }
 
-    /* =========================
-       ADD
-    ========================= */
+  else {
 
-    if (!editId) {
+    const oldFeat =
+      feats.find(
+        feat =>
+          String(feat.id) ===
+          String(editId)
+      );
+
+
+    if (
+      oldFeat &&
+      oldFeat.difficulty !==
+      difficulty
+    ) {
 
       const sameTier =
         feats.filter(
           feat =>
             feat.difficulty ===
-            difficulty
+              difficulty &&
+
+            String(feat.id) !==
+              String(editId)
         );
 
 
@@ -2077,179 +2022,6 @@
 
       featData.placement =
         maxPlacement + 1;
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("feats")
-          .insert(
-            featData
-          );
-
-
-      if (error) {
-
-        console.error(
-          error
-        );
-
-
-        errorBox.textContent =
-          error.message;
-
-        return;
-
-      }
-
-    }
-
-
-    /* =========================
-       EDIT
-    ========================= */
-
-    else {
-
-      const oldFeat =
-        feats.find(
-          feat =>
-            String(feat.id) ===
-            String(editId)
-        );
-
-
-      /*
-        If difficulty changes,
-        move feat to bottom of
-        the new tier.
-      */
-
-      if (
-        oldFeat &&
-        oldFeat.difficulty !==
-        difficulty
-      ) {
-
-        const sameTier =
-          feats.filter(
-            feat =>
-
-              feat.difficulty ===
-              difficulty &&
-
-              String(feat.id) !==
-              String(editId)
-          );
-
-
-        const maxPlacement =
-          sameTier.reduce(
-            (max, feat) => {
-
-              const placement =
-                Number(
-                  feat.placement
-                ) || 0;
-
-
-              return Math.max(
-                max,
-                placement
-              );
-
-            },
-            0
-          );
-
-
-        featData.placement =
-          maxPlacement + 1;
-
-      }
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("feats")
-          .update(
-            featData
-          )
-          .eq(
-            "id",
-            editId
-          );
-
-
-      if (error) {
-
-        console.error(
-          error
-        );
-
-
-        errorBox.textContent =
-          error.message;
-
-        return;
-
-      }
-
-    }
-
-
-    closeFeatModal();
-
-
-    await loadFeats();
-
-  }
-
-
-  /* =========================
-     DELETE
-  ========================= */
-
-  async function deleteFeat(id) {
-
-    if (
-      !currentUser ||
-      currentUser.id !== OWNER_ID
-    ) {
-
-      return;
-
-    }
-
-
-    const feat =
-      feats.find(
-        f =>
-          String(f.id) ===
-          String(id)
-      );
-
-
-    if (!feat) {
-
-      return;
-
-    }
-
-
-    const confirmed =
-      confirm(
-        `Delete "${feat.name}"?`
-      );
-
-
-    if (!confirmed) {
-
-      return;
-
     }
 
 
@@ -2257,172 +2029,232 @@
       error
     } =
       await supabaseClient
+
         .from("feats")
-        .delete()
+
+        .update(
+          featData
+        )
+
         .eq(
           "id",
-          id
+          editId
         );
 
 
     if (error) {
 
-      alert(
-        "Could not delete feat:\n\n" +
-        error.message
+      console.error(
+        error
       );
+
+
+      errorBox.textContent =
+        error.message;
 
       return;
-
     }
 
-
-    await loadFeats();
-
   }
 
 
-  /* =========================
-     MODALS
-  ========================= */
+  closeFeatModal();
 
-  function openLoginModal() {
-
-    document.getElementById(
-      "loginError"
-    ).textContent = "";
+  await loadFeats();
+}
 
 
-    document.getElementById(
-      "loginModal"
-    ).classList.add(
-      "open"
+async function deleteFeat(id) {
+
+  if (
+    !currentUser ||
+    currentUser.id !== OWNER_ID
+  ) {
+
+    return;
+  }
+
+
+  const feat =
+    feats.find(
+      f =>
+        String(f.id) ===
+        String(id)
     );
 
+
+  if (!feat) {
+
+    return;
   }
 
 
-  function closeLoginModal() {
-
-    document.getElementById(
-      "loginModal"
-    ).classList.remove(
-      "open"
+  const confirmed =
+    confirm(
+      `Delete "${feat.name}"?`
     );
 
+
+  if (!confirmed) {
+
+    return;
   }
 
 
-  function closeFeatModal() {
+  const {
+    error
+  } =
+    await supabaseClient
 
-    document.getElementById(
-      "featModal"
-    ).classList.remove(
-      "open"
-    );
+      .from("feats")
 
-  }
+      .delete()
 
-
-  /* =========================
-     SEARCH
-  ========================= */
-
-  document.getElementById(
-    "search"
-  ).addEventListener(
-    "input",
-    render
-  );
-
-
-  document.getElementById(
-    "difficultyFilter"
-  ).addEventListener(
-    "change",
-    render
-  );
-
-
-  /* =========================
-     ESCAPE HTML
-  ========================= */
-
-  function escapeHtml(value) {
-
-    return String(value)
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /'/g,
-        "&#039;"
+      .eq(
+        "id",
+        id
       );
 
+
+  if (error) {
+
+    alert(
+      "Could not delete feat:\n\n" +
+      error.message
+    );
+
+    return;
   }
 
 
-  function escapeAttribute(value) {
-
-    return String(value)
-
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-
-      .replace(
-        /</g,
-        "&lt;"
-      )
-
-      .replace(
-        />/g,
-        "&gt;"
-      );
-
-  }
+  await loadFeats();
+}
 
 
-  /* =========================
-     START
-  ========================= */
+function openLoginModal() {
 
-  async function start() {
-
-    await checkAuth();
-
-    await loadFeats();
-
-  }
+  document.getElementById(
+    "loginError"
+  ).textContent = "";
 
 
-  start();
+  document.getElementById(
+    "loginModal"
+  ).classList.add(
+    "open"
+  );
+}
+
+
+function closeLoginModal() {
+
+  document.getElementById(
+    "loginModal"
+  ).classList.remove(
+    "open"
+  );
+}
+
+
+function closeFeatModal() {
+
+  document.getElementById(
+    "featModal"
+  ).classList.remove(
+    "open"
+  );
+}
+
+
+document.getElementById(
+  "search"
+).addEventListener(
+  "input",
+  render
+);
+
+
+document.getElementById(
+  "difficultyFilter"
+).addEventListener(
+  "change",
+  render
+);
+
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+}
+
+
+function escapeAttribute(value) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    );
+}
+
+
+async function start() {
+
+  await checkAuth();
+
+  await loadFeats();
+}
+
+
+start();
 
 </script>
 
 </body>
 </html>
+```
+
+**What changed:** the thumbnail is now a proper **16:9 panel**, uses `contain` + `no-repeat`, and the content/proof/thumbnail columns are packed much more tightly. Your existing database and functionality stay the same.
+
+After replacing `index.html`, commit/push it and refresh the site.
