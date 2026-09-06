@@ -313,11 +313,14 @@
 
     <select id="difficultyFilter">
       <option value="all">All Difficulties</option>
+      <option value="Impossible">Impossible</option>
       <option value="Extreme">Extreme</option>
       <option value="Insane">Insane</option>
+      <option value="Very Hard">Very Hard</option>
       <option value="Hard">Hard</option>
       <option value="Normal">Normal</option>
       <option value="Easy">Easy</option>
+      <option value="Simple">Simple</option>
     </select>
 
     <button id="addButton" onclick="openAddModal()" style="display:none;">
@@ -397,11 +400,14 @@
       <label>Difficulty</label>
 
       <select id="featDifficulty">
+        <option value="Impossible">Impossible</option>
         <option value="Extreme">Extreme</option>
         <option value="Insane">Insane</option>
+        <option value="Very Hard">Very Hard</option>
         <option value="Hard">Hard</option>
         <option value="Normal">Normal</option>
         <option value="Easy">Easy</option>
+        <option value="Simple">Simple</option>
       </select>
 
     </div>
@@ -476,11 +482,14 @@
 
 
   const difficultyOrder = [
+    "Impossible",
     "Extreme",
     "Insane",
+    "Very Hard",
     "Hard",
     "Normal",
-    "Easy"
+    "Easy",
+    "Simple"
   ];
 
 
