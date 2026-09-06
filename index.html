@@ -282,6 +282,19 @@
       padding: 50px 0;
     }
 
+    .request-item {
+      background: #181818;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    #requestsList {
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
     @media (max-width: 800px) {
       .feat {
         grid-template-columns: 45px 1fr;
@@ -325,6 +338,14 @@
 
     <button id="addButton" onclick="openAddModal()" style="display:none;">
       + Add Feat
+    </button>
+
+    <button id="requestFeatButton" class="secondary" onclick="openRequestModal()">
+      Request a Feat
+    </button>
+
+    <button id="requestsButton" class="secondary" onclick="openRequestsListModal()" style="display:none;">
+      Requests
     </button>
 
     <div class="auth">
@@ -451,6 +472,54 @@
 </div>
 
 
+<!-- REQUEST A FEAT MODAL (public, no login needed) -->
+
+<div class="modal" id="requestModal">
+
+  <div class="modal-box">
+
+    <h2>Request a Feat</h2>
+
+    <div class="form-group">
+      <label>What should they attempt next?</label>
+      <textarea
+        id="requestMessage"
+        placeholder="e.g. You should try Tartarus on Geometry Dash..."
+      ></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button onclick="submitFeatRequest()">Send</button>
+      <button class="secondary" onclick="closeRequestModal()">Cancel</button>
+    </div>
+
+    <div id="requestError" style="color:#ff6666;margin-top:12px;"></div>
+    <div id="requestSuccess" style="color:#6ee7a0;margin-top:12px;"></div>
+
+  </div>
+
+</div>
+
+
+<!-- REQUESTS INBOX MODAL (owner only) -->
+
+<div class="modal" id="requestsListModal">
+
+  <div class="modal-box" style="width:min(640px,100%);">
+
+    <h2>Feat Requests</h2>
+
+    <div id="requestsList"></div>
+
+    <div class="modal-actions">
+      <button class="secondary" onclick="closeRequestsListModal()">Close</button>
+    </div>
+
+  </div>
+
+</div>
+
+
 <script>
 
   /* =========================
@@ -532,6 +601,9 @@
     document.getElementById("addButton").style.display =
       loggedIn ? "block" : "none";
 
+    document.getElementById("requestsButton").style.display =
+      loggedIn ? "block" : "none";
+
     document.getElementById("userStatus").textContent =
       loggedIn ? "Logged in" : "";
   }
@@ -573,6 +645,7 @@
     closeLoginModal();
 
     await loadFeats();
+    await loadFeatRequests();
   }
 
 
@@ -1570,6 +1643,182 @@
 
 
   /* =========================
+     REQUEST A FEAT (public)
+  ========================= */
+
+  function openRequestModal() {
+
+    document.getElementById("requestMessage").value = "";
+    document.getElementById("requestError").textContent = "";
+    document.getElementById("requestSuccess").textContent = "";
+
+    document.getElementById("requestModal")
+      .classList.add("open");
+  }
+
+
+  function closeRequestModal() {
+
+    document.getElementById("requestModal")
+      .classList.remove("open");
+  }
+
+
+  async function submitFeatRequest() {
+
+    const message =
+      document.getElementById("requestMessage")
+        .value
+        .trim();
+
+    const errorBox =
+      document.getElementById("requestError");
+
+    const successBox =
+      document.getElementById("requestSuccess");
+
+    errorBox.textContent = "";
+    successBox.textContent = "";
+
+    if (!message) {
+      errorBox.textContent = "Type something first.";
+      return;
+    }
+
+    const {
+      error
+    } = await supabaseClient
+      .from("feat_requests")
+      .insert({ message });
+
+    if (error) {
+
+      console.error(error);
+
+      errorBox.textContent =
+        "Could not send: " + error.message;
+
+      return;
+    }
+
+    successBox.textContent =
+      "Sent! Thanks for the suggestion.";
+
+    document.getElementById("requestMessage").value = "";
+
+    setTimeout(closeRequestModal, 1200);
+  }
+
+
+  /* =========================
+     REQUESTS INBOX (owner only)
+  ========================= */
+
+  let featRequests = [];
+
+  async function loadFeatRequests() {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      return;
+    }
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("feat_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Failed to load requests:", error);
+      return;
+    }
+
+    featRequests = data || [];
+  }
+
+
+  function openRequestsListModal() {
+
+    renderRequestsList();
+
+    document.getElementById("requestsListModal")
+      .classList.add("open");
+  }
+
+
+  function closeRequestsListModal() {
+
+    document.getElementById("requestsListModal")
+      .classList.remove("open");
+  }
+
+
+  function renderRequestsList() {
+
+    const container =
+      document.getElementById("requestsList");
+
+    if (!featRequests.length) {
+
+      container.innerHTML =
+        `<div class="empty">No requests yet.</div>`;
+
+      return;
+    }
+
+    container.innerHTML =
+      featRequests.map(req => `
+
+        <div class="request-item">
+          <div style="color:#ccc; white-space:pre-wrap;">
+            ${escapeHtml(req.message)}
+          </div>
+          <div style="color:#666; font-size:12px; margin-top:8px;">
+            ${new Date(req.created_at).toLocaleString()}
+          </div>
+          <div style="margin-top:10px;">
+            <button class="danger" onclick="deleteFeatRequest('${req.id}')">
+              Delete
+            </button>
+          </div>
+        </div>
+
+      `).join("");
+  }
+
+
+  async function deleteFeatRequest(id) {
+
+    if (
+      !currentUser ||
+      currentUser.id !== OWNER_ID
+    ) {
+      return;
+    }
+
+    const {
+      error
+    } = await supabaseClient
+      .from("feat_requests")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert("Could not delete: " + error.message);
+      return;
+    }
+
+    await loadFeatRequests();
+    renderRequestsList();
+  }
+
+
+  /* =========================
      SEARCH / FILTER
   ========================= */
 
@@ -1621,6 +1870,7 @@
     await checkAuth();
 
     await loadFeats();
+    await loadFeatRequests();
 
   }
 
